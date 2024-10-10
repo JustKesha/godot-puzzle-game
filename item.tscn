@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=3 uid="uid://bn33rakab2q66"]
+
+[ext_resource type="Script" path="res://item.gd" id="1_6v7ew"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2t3f8"]
+bounce = 0.35
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_d23ss"]
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f21l1"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uuhhc"]
+material = SubResource("StandardMaterial3D_f21l1")
+size = Vector3(0.65, 0.65, 0.65)
+
+[sub_resource type="Animation" id="Animation_hn4e6"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_lvt78"]
+resource_name = "float"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model")
+tracks/0/interp = 2
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 2, 1, 0, 0.2, 0, 4, 1, 0, 0, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c1t7b"]
+_data = {
+"RESET": SubResource("Animation_hn4e6"),
+"float": SubResource("Animation_lvt78")
+}
+
+[node name="Item" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.22291, 0)
+collision_layer = 4
+collision_mask = 7
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 2.5
+physics_material_override = SubResource("PhysicsMaterial_2t3f8")
+script = ExtResource("1_6v7ew")
+
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_d23ss")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)
+mesh = SubResource("BoxMesh_uuhhc")
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_c1t7b")
+}

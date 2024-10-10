@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://bjfbddfv7kuyk"]
+
+[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://item.tscn" id="1_fewlv"]
+[ext_resource type="PackedScene" uid="uid://n8la4p4qmdef" path="res://player.tscn" id="1_jsmjk"]
+
+[sub_resource type="Environment" id="Environment_0a3y8"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5gg77"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p80cr"]
+size = Vector2(100, 100)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ej6i3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1avg0"]
+albedo_color = Color(0.556863, 0.52549, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nrkjx"]
+material = SubResource("StandardMaterial3D_1avg0")
+size = Vector3(0.2, 3, 0.2)
+
+[node name="Demo" type="Node3D"]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.824106, -0.431343, 0.36714, 0, 0.64816, 0.761504, -0.566435, -0.627561, 0.534153, 0, 0, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0a3y8")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_5gg77")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_p80cr")
+skeleton = NodePath("../..")
+
+[node name="Hitbox" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("WorldBoundaryShape3D_ej6i3")
+
+[node name="Item" parent="." instance=ExtResource("1_fewlv")]
+
+[node name="Player" parent="." instance=ExtResource("1_jsmjk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.257531, 2, -0.497593)
+
+[node name="PLATE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.151682, -2.23454)
+mesh = SubResource("BoxMesh_nrkjx")
