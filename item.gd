@@ -1,46 +1,107 @@
 class_name Item extends RigidBody3D
 
 # Item
+@onready var hide_when_picked = [ $Hitbox, ]
+@onready var death_timer = $Death
+@onready var death_particles = [ ]
+@onready var remove_on_death = [ ]
+@onready var afterlife_timer = $Afterlife
+@onready var delete_particles = [ $DeleteParticles, ]
+@onready var remove_on_delete = [ $Hitbox, $View, ]
 var is_picked_up = false
+var death_duration = 1.0
+var is_dead = false
+var is_deleted = false
 
 # Scale
-@onready var SCALING_CHILDREN = [ $Hitbox, $Model, ]
-const SCALE_SPEED = 4
+@onready var scaling_children = [ $Hitbox, $View, ]
+const SCALE_SPEED = 3
 const DEFAULT_SCALE = 1
-const PICKED_UP_SCALE = .45
+const PICKED_UP_SCALE = .6
 var current_scale = DEFAULT_SCALE
-var aimed_scale:float
+var aimed_scale = DEFAULT_SCALE
 var is_aimed_scale_reached = false
-var scale_direction:int
+var scale_direction = 0
 
 # Rotation
-@onready var model = $Model
-var DEFAULT_ROTATION_SPEED = .012
-var PICKED_UP_ROTATION_SPEED = -DEFAULT_ROTATION_SPEED / 2
+@onready var model = $View/Model
+const DEFAULT_ROTATION_SPEED = .012
+const PICKED_UP_ROTATION_SPEED = -DEFAULT_ROTATION_SPEED / 2
 var rotation_speed = DEFAULT_ROTATION_SPEED
 
 # Animations
 @onready var animation_player = $Animator
+var animations = {
+	'death': 'WOBBLE',
+	'default': 'FLOAT',
+	'picked': 'RESET',
+	'delete': 'RESET',
+}
 
 # Item
 
 func set_picked_up(value:bool):
+	if is_dead: return
+	if is_picked_up == value: return
+	
 	is_picked_up = value
 	
 	if is_picked_up:
 		set_aimed_scale(PICKED_UP_SCALE)
 		set_rotation_speed(PICKED_UP_ROTATION_SPEED)
-		play_animation('RESET')
+		linear_velocity = Vector3.ZERO
+		animation_player.play(animations.picked)
+		for shy_child in hide_when_picked:
+			shy_child.disabled = true
 	else:
+		linear_velocity = Vector3.ZERO
 		set_aimed_scale(DEFAULT_SCALE)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
-		play_animation('default')
+		animation_player.play(animations.default)
+		for shy_child in hide_when_picked:
+			shy_child.disabled = false
+	
+	print('Picked up ' if is_picked_up else 'Dropped ', name)
+
+func delete():
+	if is_deleted: return
+	
+	is_deleted = true
+	is_dead = true
+	
+	afterlife_timer.start(0)
+	animation_player.play(animations.delete)
+	freeze = true
+	for child in remove_on_death:
+		if child == null: continue
 		
-	print('Item picked up status was changed')
+		child.queue_free()
+	for child in remove_on_delete:
+		child.queue_free()
+	for particles in delete_particles:
+		particles.emitting = true
+
+func die(source_object:Object = null, death_time:float = death_duration):
+	if is_dead: return
+	if death_time <= .05:
+		delete()
+		return
+	
+	is_dead = true
+	
+	death_timer.wait_time = death_time
+	death_timer.start(0)
+	animation_player.play(animations.death)
+	freeze = true # NOTE can be removed if you want it bouncy when it hits the lava or somthn
+	for child in remove_on_death:
+		child.queue_free()
+	for particles in death_particles:
+		particles.emitting = true
 
 # Scale
 
 func set_aimed_scale(value:float):
+	if is_dead: return
 	if value == current_scale: return
 	
 	aimed_scale = value
@@ -48,6 +109,7 @@ func set_aimed_scale(value:float):
 	scale_direction = 1 if aimed_scale > current_scale else -1
 
 func update_scale(delta:float):
+	if is_deleted: return
 	if is_aimed_scale_reached: return
 	
 	# https://github.com/godotengine/godot/issues/5734
@@ -59,7 +121,7 @@ func update_scale(delta:float):
 		scale_direction < 0 and current_scale < aimed_scale):
 		current_scale = aimed_scale
 	
-	for scaling_child in SCALING_CHILDREN:
+	for scaling_child in scaling_children:
 		scaling_child.scale = Vector3(current_scale, current_scale, current_scale)
 	
 	is_aimed_scale_reached = current_scale == aimed_scale
@@ -73,19 +135,24 @@ func set_rotation_speed(value:float):
 	rotation_speed = value
 
 func apply_rotation():
-	# I couldnt figure out a way to do this smoothly using animation, there might not be one
 	model.rotate_y(rotation_speed)
-
-# Animations
-
-func play_animation(name:String):
-	animation_player.play(name)
 
 # General
 
 func _ready():
-	play_animation('default')
+	animation_player.play(animations.default)
 
-func _process(delta: float) -> void:
+func _process(delta:float):
+	if is_deleted: return
+	
 	update_scale(delta)
+	
+	if is_dead: return
+	
 	apply_rotation()
+
+func _on_death_timeout() -> void:
+	delete()
+
+func _on_afterlife_timeout() -> void:
+	queue_free()

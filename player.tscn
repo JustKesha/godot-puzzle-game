@@ -35,6 +35,5 @@ collision_mask = 7
 
 [node name="PixelateShader" type="MeshInstance3D" parent="Head/Camera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
-visible = false
 mesh = SubResource("QuadMesh_smjwk")
 skeleton = NodePath("../..")

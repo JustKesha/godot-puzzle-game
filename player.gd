@@ -12,10 +12,10 @@ const GRAVITY = 9.8 # cannot assign ProjectSettings.get_setting("physics/3d/defa
 
 # Camera
 const SENSETIVITY = 0.001
-const MIN_ROTATION = -60
+const MIN_ROTATION = -75
 const MAX_ROTATION = 85
 const BOBBING_FREQUENCY = 2.5
-const BOBBING_AMPLITUDE = 0.032
+const BOBBING_AMPLITUDE = 0.064
 var bobbing_offset = 0.0
 
 # Items
@@ -55,6 +55,7 @@ func apply_rotation(event:InputEventMouseMotion):
 
 # Camera
 
+# TODO Make camera slowly balance out bobbing_offset to 0 when standing still
 func apply_head_bobbing(delta:float):
 	bobbing_offset += delta * velocity.length() * float(is_on_floor())
 	
@@ -94,14 +95,15 @@ func pick_up_item(item:Object = object_aimed):
 	if not item is Item:
 		print('ERROR: Tried to pick up a non item object')
 		return
+	if item.is_dead:
+		print('ERROR: Tried to pick up a dead item')
+		return
 	
 	item_picked = item
 	
 	item_picked_distance = camera.global_position.distance_to(item.global_position)
 	
 	item_picked.set_picked_up(true)
-	
-	print('Picked up ', item.name)
 
 func drop_item():
 	if item_picked == null:
@@ -109,8 +111,6 @@ func drop_item():
 		return
 	
 	item_picked.set_picked_up(false)
-	
-	print('Dropped ', item_picked.name)
 	
 	item_picked = null
 

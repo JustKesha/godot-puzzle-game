@@ -10,9 +10,13 @@ config_version=5
 
 [application]
 
-config/name="Learning"
+config/name="Over the Tile Wall"
 run/main_scene="res://demo.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+
+[display]
+
+window/size/viewport_width=648
 
 [filesystem]
 
@@ -55,6 +59,7 @@ pick_up={
 3d_physics/layer_1="Map"
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Items"
+3d_physics/layer_4="Tiles"
 
 [physics]
 
