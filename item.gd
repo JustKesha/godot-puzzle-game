@@ -1,7 +1,7 @@
 class_name Item extends RigidBody3D
 
 # Item
-@onready var hide_when_picked = [ $Hitbox, ]
+@onready var disable_when_picked = [ $Hitbox, ]
 @onready var death_timer = $Death
 @onready var death_particles = [ ]
 @onready var remove_on_death = [ ]
@@ -38,28 +38,35 @@ var animations = {
 	'delete': 'RESET',
 }
 
+# Physics
+@onready var neighborhood_area = $Neighborhood
+
 # Item
 
-func set_picked_up(value:bool):
+# BUG Not disabling hitbox on pickup (to be able to hit pickup raycast from inventory) can cause problems (like tile tile activation by picked up items)
+# TODO Think of a better aproach instead of disable_children arg
+func set_picked_up(value:bool, disable_children:bool = value):
 	if is_dead: return
 	if is_picked_up == value: return
 	
 	is_picked_up = value
 	
+	for shy_child in disable_when_picked:
+		shy_child.disabled = disable_children
+	
 	if is_picked_up:
+		freeze = true
+		wake_up_neighbors()
 		set_aimed_scale(PICKED_UP_SCALE)
 		set_rotation_speed(PICKED_UP_ROTATION_SPEED)
 		linear_velocity = Vector3.ZERO
 		animation_player.play(animations.picked)
-		for shy_child in hide_when_picked:
-			shy_child.disabled = true
 	else:
+		freeze = false
 		linear_velocity = Vector3.ZERO
 		set_aimed_scale(DEFAULT_SCALE)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
-		for shy_child in hide_when_picked:
-			shy_child.disabled = false
 	
 	print('Picked up ' if is_picked_up else 'Dropped ', name)
 
@@ -92,7 +99,7 @@ func die(source_object:Object = null, death_time:float = death_duration):
 	death_timer.wait_time = death_time
 	death_timer.start(0)
 	animation_player.play(animations.death)
-	freeze = true # NOTE can be removed if you want it bouncy when it hits the lava or somthn
+	freeze = true # NOTE Can be removed if you want it bouncy when it hits the lava or somthn
 	for child in remove_on_death:
 		child.queue_free()
 	for particles in death_particles:
@@ -102,7 +109,7 @@ func die(source_object:Object = null, death_time:float = death_duration):
 
 func set_aimed_scale(value:float):
 	if is_dead: return
-	if value == current_scale: return
+	if aimed_scale == value: return
 	
 	aimed_scale = value
 	is_aimed_scale_reached = false
@@ -136,6 +143,16 @@ func set_rotation_speed(value:float):
 
 func apply_rotation():
 	model.rotate_y(rotation_speed)
+
+# Physics
+
+func wake_up_neighbors(velocity:Vector3 = Vector3(0, 1, 0)):
+	# Could also just set can_sleep to false in _ready() instead
+	# Docs https://docs.godot.community/classes/class_rigidbody3d.html#class-rigidbody3d-property-can-sleep
+	for neighbor in neighborhood_area.get_overlapping_bodies():
+		if not neighbor is RigidBody3D: continue
+		# Changing sleep state same frame as disabling hitbox doesnt help
+		neighbor.linear_velocity += velocity
 
 # General
 

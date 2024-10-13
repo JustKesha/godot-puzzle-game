@@ -30,10 +30,9 @@ shadow_enabled = true
 environment = SubResource("Environment_0a3y8")
 
 [node name="Wall" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.627192, -1.1522)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.627192, -3.09764)
 
 [node name="Mesh" type="MeshInstance3D" parent="Wall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.97839)
 mesh = SubResource("QuadMesh_ujp32")
 skeleton = NodePath("../..")
 
@@ -55,11 +54,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
 
 [node name="Tile" parent="." instance=ExtResource("3_y1srp")]
 
-[node name="Item" parent="." instance=ExtResource("1_fewlv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24594, 0.65, 5.51115)
+[node name="Item1" parent="." instance=ExtResource("1_fewlv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
 
 [node name="Item2" parent="." instance=ExtResource("1_fewlv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -5.68017, 0.65, 4.56656)
+transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
 
 [node name="Item3" parent="." instance=ExtResource("1_fewlv")]
 transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)

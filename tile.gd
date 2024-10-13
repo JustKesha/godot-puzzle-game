@@ -59,6 +59,7 @@ func set_is_pressed(value:bool):
 	else:
 		animation_player.play(animations.lift)
 
+# TODO Add a string id arg mb
 func hold_pressed(duration:float, force_overwrite:bool = true):
 	if duration < holding_timer.time_left and not force_overwrite: return
 	
@@ -66,6 +67,7 @@ func hold_pressed(duration:float, force_overwrite:bool = true):
 	holding_timer.wait_time = duration
 	holding_timer.start(0)
 
+# TODO Create a var for holdig timer
 func stop_holding():
 	$Holding.stop()
 

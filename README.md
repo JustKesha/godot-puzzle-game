@@ -10,3 +10,5 @@ Below are different interaction scenarios between a tile that destroyes objects 
 ![The tile was first set on a hold delay using a timer](preview/timer.gif)
 #### *The tile was first forced into pressed state by a script*
 ![The tile was first forced into pressed state by a script](preview/set-to-pressed.gif)
+
+<!-- TODO Add item interaction illustrations here or later along side the inventory update -->

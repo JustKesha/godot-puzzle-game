@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://n8la4p4qmdef"]
+[gd_scene load_steps=13 format=3 uid="uid://n8la4p4qmdef"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_xtcfu"]
 [ext_resource type="Shader" path="res://pixelate.gdshader" id="2_5e1bt"]
@@ -12,6 +12,41 @@ shader = ExtResource("2_5e1bt")
 
 [sub_resource type="QuadMesh" id="QuadMesh_smjwk"]
 material = SubResource("ShaderMaterial_842so")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tlmv"]
+albedo_color = Color(1, 0.384314, 0.427451, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_d774d"]
+material = SubResource("StandardMaterial3D_1tlmv")
+size = Vector3(0.4, 0.3, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yka7p"]
+albedo_color = Color(1, 0.384314, 0.427451, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kayg8"]
+material = SubResource("StandardMaterial3D_yka7p")
+size = Vector3(0.1, 0.5, 0.1)
+
+[sub_resource type="Animation" id="Animation_fovwa"]
+resource_name = "POINT"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.25, 1, 0, 0.1, 0, 0.5, 1, 0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_3xbmy"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vgpmo"]
+_data = {
+"POINT": SubResource("Animation_fovwa"),
+"RESET": SubResource("Animation_3xbmy")
+}
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -37,3 +72,26 @@ collision_mask = 7
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
 mesh = SubResource("QuadMesh_smjwk")
 skeleton = NodePath("../..")
+
+[node name="Inventory" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="HITPOINT" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021807, 0)
+
+[node name="Model" type="Node3D" parent="HITPOINT"]
+
+[node name="ARROW_HEAD" type="MeshInstance3D" parent="HITPOINT/Model"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, 0, -0.4, 0)
+mesh = SubResource("PrismMesh_d774d")
+skeleton = NodePath("../../..")
+
+[node name="ARROW_SHAFT" type="MeshInstance3D" parent="HITPOINT/Model"]
+mesh = SubResource("BoxMesh_kayg8")
+skeleton = NodePath("../../..")
+
+[node name="Animator" type="AnimationPlayer" parent="HITPOINT"]
+root_node = NodePath("../Model/ARROW_SHAFT")
+libraries = {
+"": SubResource("AnimationLibrary_vgpmo")
+}
