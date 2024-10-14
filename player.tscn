@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://n8la4p4qmdef"]
+[gd_scene load_steps=14 format=3 uid="uid://n8la4p4qmdef"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_xtcfu"]
 [ext_resource type="Shader" path="res://pixelate.gdshader" id="2_5e1bt"]
@@ -12,6 +12,9 @@ shader = ExtResource("2_5e1bt")
 
 [sub_resource type="QuadMesh" id="QuadMesh_smjwk"]
 material = SubResource("ShaderMaterial_842so")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dt7bg"]
+size = Vector3(0.75, 3.5, 0.75)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tlmv"]
 albedo_color = Color(1, 0.384314, 0.427451, 1)
@@ -76,6 +79,14 @@ skeleton = NodePath("../..")
 [node name="Inventory" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
+[node name="AutoCollect" type="Area3D" parent="Inventory"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 0
+collision_mask = 4
+
+[node name="Hitbox" type="CollisionShape3D" parent="Inventory/AutoCollect"]
+shape = SubResource("BoxShape3D_dt7bg")
+
 [node name="HITPOINT" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021807, 0)
 
@@ -95,3 +106,5 @@ root_node = NodePath("../Model/ARROW_SHAFT")
 libraries = {
 "": SubResource("AnimationLibrary_vgpmo")
 }
+
+[connection signal="body_entered" from="Inventory/AutoCollect" to="." method="_on_auto_collect_body_entered"]

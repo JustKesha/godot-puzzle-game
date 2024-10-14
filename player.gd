@@ -195,6 +195,12 @@ func remove_item(item:Item):
 	
 	print('Removed ', item.name, ' from inventory')
 
+func _on_auto_collect_body_entered(body:Node3D):
+	if not body is Item: return
+	if body in inventory: return
+	
+	collect_item(body)
+
 # General
 
 func _ready():
