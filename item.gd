@@ -19,7 +19,7 @@ const SCALE_SPEED = 3
 const DEFAULT_SCALE = 1
 const PICKED_UP_SCALE = .6
 var current_scale = DEFAULT_SCALE
-var aimed_scale = DEFAULT_SCALE
+var aimed_scale = DEFAULT_SCALE # TODO Rename to target_scale
 var is_aimed_scale_reached = false
 var scale_direction = 0
 
@@ -28,6 +28,12 @@ var scale_direction = 0
 const DEFAULT_ROTATION_SPEED = .012
 const PICKED_UP_ROTATION_SPEED = -DEFAULT_ROTATION_SPEED / 2
 var rotation_speed = DEFAULT_ROTATION_SPEED
+
+# Movement
+const SPEED = 7.5
+const POSITION_ACCURACY = 3.0
+var target_position = Vector3.ZERO
+var is_in_manual_motion = false
 
 # Animations
 @onready var animation_player = $Animator
@@ -64,6 +70,7 @@ func set_picked_up(value:bool, disable_children:bool = value):
 	else:
 		freeze = false
 		linear_velocity = Vector3.ZERO
+		stop_moving()
 		set_aimed_scale(DEFAULT_SCALE)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
@@ -144,6 +151,40 @@ func set_rotation_speed(value:float):
 func apply_rotation():
 	model.rotate_y(rotation_speed)
 
+# Movement
+
+# FIXME Continue here
+
+func are_vectors_roughly_equal(vector_a:Vector3, vector_b:Vector3) -> bool:
+	var accuracy = Vector3(
+		0.1 ** POSITION_ACCURACY,
+		0.1 ** POSITION_ACCURACY,
+		0.1 ** POSITION_ACCURACY,
+	)
+	return snapped(vector_a, accuracy) == snapped(vector_b, accuracy)
+
+# NOTE Could perhaps do movement with forces to be able to use it in non picked state
+func update_position(delta:float):
+	if not is_in_manual_motion: return
+	if are_vectors_roughly_equal(global_position, target_position):
+		stop_moving()
+		return
+	
+	global_position = global_position.lerp(target_position, SPEED * delta)
+	linear_velocity = Vector3.ZERO
+
+func set_to_position(position_vector:Vector3):
+	global_position = position_vector
+
+func move_to_position(position_vector:Vector3):
+	target_position = position_vector
+	is_in_manual_motion = true
+	freeze = true
+
+func stop_moving():
+	is_in_manual_motion = false
+	freeze = false
+
 # Physics
 
 func wake_up_neighbors(velocity:Vector3 = Vector3(0, 1, 0)):
@@ -160,6 +201,8 @@ func _ready():
 	animation_player.play(animations.default)
 
 func _process(delta:float):
+	update_position(delta)
+	
 	if is_deleted: return
 	
 	update_scale(delta)

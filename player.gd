@@ -31,8 +31,11 @@ var item_picked_distance = 0.0
 # Inventory
 @onready var inventory_center_mark = $Inventory
 const INVENTORY_RADIUS = 1.0
-const INVENTORY_SPIN_SPEED = .5
+const INVENTORY_FOCUS_ANGLE_X = 20
+const INVENTORY_SPEED_DEFAULT = .5
+const INVENTORY_SPEED_FOCUSED = .1
 var inventory = []
+var inventory_spin_speed = INVENTORY_SPEED_DEFAULT
 var inventory_spin_offset = 0.0
 
 # Movement
@@ -57,6 +60,9 @@ func apply_gravity(delta:float):
 		velocity.y -= GRAVITY * delta
 
 # Rotation
+
+func get_vertical_rotation() -> float:
+	return camera.rotation.x
 
 func apply_rotation(event:InputEventMouseMotion):
 	body.rotate_y(-event.relative.x * SENSETIVITY)
@@ -105,11 +111,10 @@ func get_picked_up_item_lock_position() -> Vector3:
 	var forward = -pickup_lock_object.get_global_transform().basis.z
 	return lock_object_position + item_picked_distance * forward
 
-# TODO Smooth out item movement, not sure
 func update_item_picked():
 	if item_picked == null: return
 	
-	item_picked.position = get_picked_up_item_lock_position() # set_position method is already taken
+	item_picked.move_to_position(get_picked_up_item_lock_position())
 
 func pick_up_item(item:Item = item_aimed):
 	if item == null:
@@ -127,7 +132,6 @@ func pick_up_item(item:Item = item_aimed):
 	
 	item_picked.set_picked_up(true)
 
-# TODO Rename, as it only drops item_picked
 func drop_item_picked():
 	if item_picked == null:
 		print('ERROR: Tried to drop a null object')
@@ -139,11 +143,9 @@ func drop_item_picked():
 
 # Inventory
 
-# TODO Smooth out item movement, use move(to, speed) instead of set_pos
 func update_inventory_items():
 	if inventory.size() == 0: return
 	
-	# TODO Make the inventory center slowly follow the player
 	var center = inventory_center_mark.global_position
 	var radius = INVENTORY_RADIUS
 	var offset = inventory_spin_offset
@@ -157,16 +159,15 @@ func update_inventory_items():
 			center.z + radius * sin(deg_to_rad(angle + offset))
 		)
 		
-		item.position = pos
+		item.move_to_position(pos)
 		
 		index += 1
 	
-	inventory_spin_offset += INVENTORY_SPIN_SPEED
+	# Could put this in apply_rotation, but there would be no difference
+	inventory_spin_speed = INVENTORY_SPEED_FOCUSED if rad_to_deg(get_vertical_rotation()) >= INVENTORY_FOCUS_ANGLE_X else INVENTORY_SPEED_DEFAULT
 	
-	#for item in inventory:
-		#item.position = inventory_center
+	inventory_spin_offset += inventory_spin_speed
 
-# TODO Smooth out item movement
 func collect_item(item:Item = item_aimed):
 	if item == null:
 		print('ERROR: Tried to collect a null item')
