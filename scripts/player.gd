@@ -30,10 +30,11 @@ var item_picked_distance = 0.0
 
 # Inventory
 @onready var inventory_center_mark = $Inventory
+# TODO Add dynamic inventory radius (plus max and min radius)
 const INVENTORY_RADIUS = 1.0
 const INVENTORY_FOCUS_ANGLE_X = 20
-const INVENTORY_SPEED_DEFAULT = .5
-const INVENTORY_SPEED_FOCUSED = .1
+const INVENTORY_SPEED_DEFAULT = .35
+const INVENTORY_SPEED_FOCUSED = .05
 var inventory = []
 var inventory_spin_speed = INVENTORY_SPEED_DEFAULT
 var inventory_spin_offset = 0.0
@@ -150,22 +151,22 @@ func update_inventory_items():
 	var radius = INVENTORY_RADIUS
 	var offset = inventory_spin_offset
 	var index  = 0
+	# WARNING Careful, angles.size doesnt always equal to inventory.size;
+	# Godot range func transforms all args into int (will result in more arguments than expected if inventory.size is equal to 7 or 11)
+	var angles = range(0, 360, 360 / inventory.size())
 	
-	for angle in range(0, 360, 360 / inventory.size()):
-		var item = inventory[index]
+	for i in range(inventory.size()):
+		var item = inventory[i]
 		var pos  = Vector3(
-			center.x + radius * cos(deg_to_rad(angle + offset)),
+			center.x + radius * cos(deg_to_rad(angles[i] + offset)),
 			center.y,
-			center.z + radius * sin(deg_to_rad(angle + offset))
+			center.z + radius * sin(deg_to_rad(angles[i] + offset))
 		)
 		
 		item.move_to_position(pos)
-		
-		index += 1
 	
 	# Could put this in apply_rotation, but there would be no difference
 	inventory_spin_speed = INVENTORY_SPEED_FOCUSED if rad_to_deg(get_vertical_rotation()) >= INVENTORY_FOCUS_ANGLE_X else INVENTORY_SPEED_DEFAULT
-	
 	inventory_spin_offset += inventory_spin_speed
 
 func collect_item(item:Item = item_aimed):
@@ -184,9 +185,13 @@ func collect_item(item:Item = item_aimed):
 	inventory.append(item)
 	
 	print('Collected ', item.name)
+	print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
-# TODO Think of a better name
-func remove_item(item:Item):
+# TODO Consider a name change
+func remove_item(item:Item = item_aimed):
+	if item == null:
+		print('ERROR: Tried to remove a null item')
+		return
 	if not item in inventory:
 		print('ERROR: Tried to remove an item that is not in inventory')
 		return
@@ -195,6 +200,8 @@ func remove_item(item:Item):
 	inventory.erase(item)
 	
 	print('Removed ', item.name, ' from inventory')
+	if inventory.size() > 0:
+		print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
 func _on_auto_collect_body_entered(body:Node3D):
 	if not body is Item: return
@@ -219,7 +226,10 @@ func _input(event): # not sure _unhandled_input() is needed
 	if event is InputEventMouseMotion:
 		apply_rotation(event)
 	elif event.is_action_released("collect"):
-		collect_item()
+		if item_aimed in inventory:
+			remove_item()
+		else:
+			collect_item()
 	elif event.is_action_pressed("pick_up"):
 		pick_up_item()
 	elif event.is_action_released("pick_up"):

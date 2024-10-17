@@ -63,6 +63,42 @@ transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883,
 [node name="Item3" parent="." instance=ExtResource("3_javrv")]
 transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
 
+[node name="Item4" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+
+[node name="Item5" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+
+[node name="Item6" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+
+[node name="Item7" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+
+[node name="Item8" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+
+[node name="Item9" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+
+[node name="Item10" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+
+[node name="Item11" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+
+[node name="Item12" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+
+[node name="Item13" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+
+[node name="Item14" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+
+[node name="Item15" parent="." instance=ExtResource("3_javrv")]
+transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+
 [node name="Tile2" parent="." instance=ExtResource("4_t4xok")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.03574, 0, 0.0290365)
 
