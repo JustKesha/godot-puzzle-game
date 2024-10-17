@@ -91,7 +91,7 @@ func update_object_aimed():
 		object_aimed = pickup_raycast.get_collider()
 		# WARNING Temporary code
 		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = object_aimed.global_position + Vector3(0, 1.25, 0)
+		$HITPOINT.global_position = object_aimed.global_position + Vector3(0, 1.2, 0)
 	else:
 		object_aimed = null
 		$HITPOINT.global_position = Vector3(0, -10, 0)
@@ -100,7 +100,7 @@ func update_object_aimed():
 		item_aimed = item_picked
 		# WARNING Temporary code
 		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = item_picked.global_position + Vector3(0, 1.25, 0)
+		$HITPOINT.global_position = item_picked.global_position + Vector3(0, 1.2, 0)
 	elif object_aimed is Item:
 		item_aimed = object_aimed 
 	else:

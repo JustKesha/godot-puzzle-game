@@ -1,13 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://d1p2ieslk0qkt"]
+[gd_scene load_steps=8 format=3 uid="uid://d1p2ieslk0qkt"]
 
 [ext_resource type="Script" path="res://scripts/tile.gd" id="1_5igtn"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1avg0"]
-albedo_color = Color(0.556863, 0.52549, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_nrkjx"]
-material = SubResource("StandardMaterial3D_1avg0")
-size = Vector3(2, 0.1, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5sat3"]
 size = Vector3(2, 0.1, 2)
@@ -55,28 +48,12 @@ _data = {
 "UP": SubResource("Animation_k3xgi")
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wx4at"]
-shading_mode = 0
-albedo_color = Color(0.575103, 0.550167, 0.999997, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_fhplk"]
-material = SubResource("StandardMaterial3D_wx4at")
-radial_segments = 8
-rings = 8
-
-[sub_resource type="Curve" id="Curve_ftyvm"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.254717, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
 [node name="Tile" type="StaticBody3D"]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_5igtn")
 
-[node name="Color" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
-mesh = SubResource("BoxMesh_nrkjx")
-skeleton = NodePath("../..")
+[node name="View" type="Node3D" parent="."]
 
 [node name="Hitbox" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -92,30 +69,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
 shape = SubResource("BoxShape3D_34s7w")
 
 [node name="Animator" type="AnimationPlayer" parent="."]
+root_node = NodePath("../View")
 libraries = {
 "": SubResource("AnimationLibrary_jwwws")
 }
-
-[node name="ActivationParticles" type="CPUParticles3D" parent="."]
-emitting = false
-amount = 16
-lifetime = 2.0
-one_shot = true
-explosiveness = 1.0
-lifetime_randomness = 0.35
-mesh = SubResource("SphereMesh_fhplk")
-emission_shape = 3
-emission_box_extents = Vector3(0.65, 0.1, 0.65)
-direction = Vector3(0, 1, 0)
-spread = 0.0
-gravity = Vector3(0, 0.05, 0)
-scale_amount_min = 0.4
-scale_amount_max = 0.7
-scale_amount_curve = SubResource("Curve_ftyvm")
 
 [node name="Holding" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="Detector" to="." method="_on_detector_body_exited"]
+[connection signal="animation_changed" from="Animator" to="." method="_on_animator_animation_changed"]
 [connection signal="timeout" from="Holding" to="." method="_on_holding_timeout"]

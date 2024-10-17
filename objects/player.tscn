@@ -17,18 +17,18 @@ material = SubResource("ShaderMaterial_842so")
 size = Vector3(0.75, 3.5, 0.75)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tlmv"]
-albedo_color = Color(1, 0.384314, 0.427451, 1)
+albedo_color = Color(1, 0.23477, 0.265317, 1)
 
 [sub_resource type="PrismMesh" id="PrismMesh_d774d"]
 material = SubResource("StandardMaterial3D_1tlmv")
 size = Vector3(0.4, 0.3, 0.1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yka7p"]
-albedo_color = Color(1, 0.384314, 0.427451, 1)
+albedo_color = Color(1, 0.235294, 0.266667, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_kayg8"]
 material = SubResource("StandardMaterial3D_yka7p")
-size = Vector3(0.1, 0.5, 0.1)
+size = Vector3(0.1, 0.35, 0.1)
 
 [sub_resource type="Animation" id="Animation_fovwa"]
 resource_name = "POINT"
@@ -69,7 +69,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.715498, 0)
 [node name="PickupRaycast" type="RayCast3D" parent="Head/Camera"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 target_position = Vector3(0, -3, 0)
-collision_mask = 7
+collision_mask = 13
 
 [node name="PixelateShader" type="MeshInstance3D" parent="Head/Camera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
@@ -80,7 +80,7 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="AutoCollect" type="Area3D" parent="Inventory"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
 collision_layer = 0
 collision_mask = 4
 
@@ -92,12 +92,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021807, 0)
 
 [node name="Model" type="Node3D" parent="HITPOINT"]
 
+[node name="Light1" type="SpotLight3D" parent="HITPOINT/Model"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.708126, 0)
+visible = false
+light_color = Color(1, 0.752831, 0.482143, 1)
+light_energy = 2.0
+spot_angle = 35.0
+
+[node name="Light2" type="OmniLight3D" parent="HITPOINT/Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.42109e-14, -0.584979, 0.253948)
+visible = false
+light_energy = 0.25
+omni_range = 1.0
+
 [node name="ARROW_HEAD" type="MeshInstance3D" parent="HITPOINT/Model"]
 transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, 0, -0.4, 0)
 mesh = SubResource("PrismMesh_d774d")
 skeleton = NodePath("../../..")
 
 [node name="ARROW_SHAFT" type="MeshInstance3D" parent="HITPOINT/Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
 mesh = SubResource("BoxMesh_kayg8")
 skeleton = NodePath("../../..")
 
