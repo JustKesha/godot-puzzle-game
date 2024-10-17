@@ -19,8 +19,8 @@ const SCALE_SPEED = 3
 const DEFAULT_SCALE = 1
 const PICKED_UP_SCALE = .6
 var current_scale = DEFAULT_SCALE
-var aimed_scale = DEFAULT_SCALE # TODO Rename to target_scale
-var is_aimed_scale_reached = false
+var target_scale = DEFAULT_SCALE
+var is_target_scale_reached = false
 var scale_direction = 0
 
 # Rotation
@@ -63,7 +63,7 @@ func set_picked_up(value:bool, disable_children:bool = value):
 	if is_picked_up:
 		freeze = true
 		wake_up_neighbors()
-		set_aimed_scale(PICKED_UP_SCALE)
+		set_target_scale(PICKED_UP_SCALE)
 		set_rotation_speed(PICKED_UP_ROTATION_SPEED)
 		linear_velocity = Vector3.ZERO
 		animation_player.play(animations.picked)
@@ -71,7 +71,7 @@ func set_picked_up(value:bool, disable_children:bool = value):
 		freeze = false
 		linear_velocity = Vector3.ZERO
 		stop_moving()
-		set_aimed_scale(DEFAULT_SCALE)
+		set_target_scale(DEFAULT_SCALE)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
 	
@@ -114,33 +114,33 @@ func die(source_object:Object = null, death_time:float = death_duration):
 
 # Scale
 
-func set_aimed_scale(value:float):
+func set_target_scale(value:float):
 	if is_dead: return
-	if aimed_scale == value: return
+	if target_scale == value: return
 	
-	aimed_scale = value
-	is_aimed_scale_reached = false
-	scale_direction = 1 if aimed_scale > current_scale else -1
+	target_scale = value
+	is_target_scale_reached = false
+	scale_direction = 1 if target_scale > current_scale else -1
 
 func update_scale(delta:float):
 	if is_deleted: return
-	if is_aimed_scale_reached: return
+	if is_target_scale_reached: return
 	
 	# https://github.com/godotengine/godot/issues/5734
 	# that was a time not well spent
 	
 	current_scale += SCALE_SPEED * scale_direction * delta
 	
-	if (scale_direction > 0 and current_scale > aimed_scale or
-		scale_direction < 0 and current_scale < aimed_scale):
-		current_scale = aimed_scale
+	if (scale_direction > 0 and current_scale > target_scale or
+		scale_direction < 0 and current_scale < target_scale):
+		current_scale = target_scale
 	
 	for scaling_child in scaling_children:
 		scaling_child.scale = Vector3(current_scale, current_scale, current_scale)
 	
-	is_aimed_scale_reached = current_scale == aimed_scale
+	is_target_scale_reached = current_scale == target_scale
 	
-	if is_aimed_scale_reached:
+	if is_target_scale_reached:
 		scale_direction = 0
 
 # Rotation
@@ -152,8 +152,6 @@ func apply_rotation():
 	model.rotate_y(rotation_speed)
 
 # Movement
-
-# FIXME Continue here
 
 func are_vectors_roughly_equal(vector_a:Vector3, vector_b:Vector3) -> bool:
 	var accuracy = Vector3(

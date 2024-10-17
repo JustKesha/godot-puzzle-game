@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://bjfbddfv7kuyk"]
 
-[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://item.tscn" id="1_fewlv"]
-[ext_resource type="PackedScene" uid="uid://n8la4p4qmdef" path="res://player.tscn" id="1_jsmjk"]
-[ext_resource type="PackedScene" uid="uid://d1p2ieslk0qkt" path="res://tile.tscn" id="3_y1srp"]
+[ext_resource type="PackedScene" uid="uid://n8la4p4qmdef" path="res://objects/player.tscn" id="1_3xujw"]
+[ext_resource type="PackedScene" uid="uid://d1p2ieslk0qkt" path="res://objects/tile.tscn" id="2_g6elr"]
+[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://objects/item.tscn" id="3_javrv"]
 
 [sub_resource type="Environment" id="Environment_0a3y8"]
 
@@ -49,16 +49,16 @@ skeleton = NodePath("../..")
 [node name="Hitbox" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("WorldBoundaryShape3D_ej6i3")
 
-[node name="Player" parent="." instance=ExtResource("1_jsmjk")]
+[node name="Player" parent="." instance=ExtResource("1_3xujw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
 
-[node name="Tile" parent="." instance=ExtResource("3_y1srp")]
+[node name="Tile" parent="." instance=ExtResource("2_g6elr")]
 
-[node name="Item1" parent="." instance=ExtResource("1_fewlv")]
+[node name="Item1" parent="." instance=ExtResource("3_javrv")]
 transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
 
-[node name="Item2" parent="." instance=ExtResource("1_fewlv")]
+[node name="Item2" parent="." instance=ExtResource("3_javrv")]
 transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
 
-[node name="Item3" parent="." instance=ExtResource("1_fewlv")]
+[node name="Item3" parent="." instance=ExtResource("3_javrv")]
 transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
