@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bn33rakab2q66"]
+[gd_scene load_steps=12 format=3 uid="uid://bn33rakab2q66"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_6v7ew"]
 
@@ -10,12 +10,19 @@ bounce = 0.35
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_d23ss"]
 height = 1.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f21l1"]
-albedo_color = Color(0, 0, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pc3ty"]
+shading_mode = 0
+albedo_color = Color(0.796242, 0.796243, 0.796243, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_uuhhc"]
-material = SubResource("StandardMaterial3D_f21l1")
-size = Vector3(0.65, 0.65, 0.65)
+[sub_resource type="SphereMesh" id="SphereMesh_hmic3"]
+material = SubResource("StandardMaterial3D_pc3ty")
+radial_segments = 6
+rings = 6
+
+[sub_resource type="Curve" id="Curve_4tmie"]
+bake_resolution = 15
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.160377, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="Animation" id="Animation_lvt78"]
 resource_name = "FLOAT"
@@ -31,13 +38,6 @@ tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 2, 1, 0, 0.2, 0, 4, 1, 0, 0, 0
 
 [sub_resource type="Animation" id="Animation_2wh46"]
 resource_name = "RESET"
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("View/Model")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0)
 
 [sub_resource type="Animation" id="Animation_vylt2"]
 resource_name = "WOBBLE"
@@ -48,7 +48,7 @@ tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("View/Model")
 tracks/0/interp = 2
-tracks/0/loop_wrap = false
+tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 1.15, 0.7, 1.15, 0.25, 1, 0.7, 1.15, 0.7, 0.5, 1, 1.15, 0.7, 1.15)
 tracks/1/type = "position_3d"
 tracks/1/imported = false
@@ -65,20 +65,6 @@ _data = {
 "WOBBLE": SubResource("Animation_vylt2")
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pc3ty"]
-shading_mode = 0
-albedo_color = Color(0.796242, 0.796243, 0.796243, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_hmic3"]
-material = SubResource("StandardMaterial3D_pc3ty")
-radial_segments = 6
-rings = 6
-
-[sub_resource type="Curve" id="Curve_4tmie"]
-bake_resolution = 15
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.160377, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_5mtwp"]
 radius = 1.0
 
@@ -92,30 +78,16 @@ axis_lock_angular_z = true
 mass = 2.5
 physics_material_override = SubResource("PhysicsMaterial_2t3f8")
 script = ExtResource("1_6v7ew")
+metadata/type = "DEFAULT"
 
 [node name="Hitbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_d23ss")
 
 [node name="View" type="Node3D" parent="."]
 
-[node name="Model" type="MeshInstance3D" parent="View"]
-transform = Transform3D(1.15, 0, 0, 0, 0.7, 0, 0, 0, 1.15, 0, 0, 0)
-mesh = SubResource("BoxMesh_uuhhc")
-skeleton = NodePath("../..")
+[node name="Model" type="Node3D" parent="View"]
 
-[node name="Animator" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_c1t7b")
-}
-
-[node name="Death" type="Timer" parent="."]
-one_shot = true
-
-[node name="Afterlife" type="Timer" parent="."]
-wait_time = 7.0
-one_shot = true
-
-[node name="DeleteParticles" type="CPUParticles3D" parent="."]
+[node name="DeathParticles" type="CPUParticles3D" parent="."]
 emitting = false
 amount = 16
 lifetime = 2.5
@@ -132,6 +104,18 @@ initial_velocity_max = 0.25
 scale_amount_min = 0.25
 scale_amount_max = 0.5
 scale_amount_curve = SubResource("Curve_4tmie")
+
+[node name="Death" type="Timer" parent="."]
+one_shot = true
+
+[node name="Afterlife" type="Timer" parent="."]
+wait_time = 7.0
+one_shot = true
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_c1t7b")
+}
 
 [node name="Neighborhood" type="Area3D" parent="."]
 collision_layer = 0

@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://bjfbddfv7kuyk"]
+[gd_scene load_steps=12 format=3 uid="uid://bjfbddfv7kuyk"]
 
 [ext_resource type="PackedScene" uid="uid://n8la4p4qmdef" path="res://objects/player.tscn" id="1_3xujw"]
 [ext_resource type="PackedScene" uid="uid://cjl2xku25w8tq" path="res://objects/tiles/tile_blue.tscn" id="3_ho5pd"]
-[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://objects/item.tscn" id="3_javrv"]
+[ext_resource type="PackedScene" uid="uid://domi3vn5pa35q" path="res://objects/items/item_cube.tscn" id="4_artni"]
 [ext_resource type="PackedScene" uid="uid://dpb1gj2icwlp2" path="res://objects/tiles/tile_red.tscn" id="4_t4xok"]
+[ext_resource type="PackedScene" uid="uid://d1xr3m4kwsjly" path="res://objects/items/item_stew.tscn" id="5_k3pds"]
 
 [sub_resource type="Environment" id="Environment_0a3y8"]
 
@@ -54,53 +55,44 @@ shape = SubResource("WorldBoundaryShape3D_ej6i3")
 [node name="Player" parent="." instance=ExtResource("1_3xujw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00276184, 1, 3.49568)
 
-[node name="Item1" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+[node name="Tile1" parent="." instance=ExtResource("4_t4xok")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
 
-[node name="Item2" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+[node name="Tile2" parent="." instance=ExtResource("3_ho5pd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 
-[node name="Item3" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+[node name="Item1" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.65, 0.324)
 
-[node name="Item4" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+[node name="Item2" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.65, 0)
 
-[node name="Item5" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+[node name="Item3" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.51452, 0.65, 10.4851)
 
-[node name="Item6" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+[node name="Item4" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.57712, 0.65, 6.47249)
 
-[node name="Item7" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+[node name="Item5" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.32312, 0.65, 10.5629)
 
-[node name="Item8" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+[node name="Item6" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.38572, 0.65, 6.55031)
 
-[node name="Item9" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+[node name="Item7" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0407022, 0.65, 10.652)
 
-[node name="Item10" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+[node name="Item8" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.0219024, 0.65, 6.63939)
 
-[node name="Item11" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
+[node name="Item9" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.35579, 0.65, 10.7379)
 
-[node name="Item12" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
+[node name="Item10" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.29319, 0.65, 6.72529)
 
-[node name="Item13" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -6.24586, 0.655925, 5.51172)
+[node name="Item11" parent="." instance=ExtResource("4_artni")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.59766, 0.65, 10.819)
 
-[node name="Item14" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, -0.0037884, 0.999946, 0.00966883, -0.364792, -0.0103845, 0.931031, -5.68017, 0.65, 4.56656)
-
-[node name="Item15" parent="." instance=ExtResource("3_javrv")]
-transform = Transform3D(0.931081, 0, 0.364812, 0, 1, 0, -0.364812, 0, 0.931081, -4.99081, 0.408291, 6.50179)
-
-[node name="Tile2" parent="." instance=ExtResource("4_t4xok")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.03574, 0, 0.0290365)
-
-[node name="Tile3" parent="." instance=ExtResource("3_ho5pd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.55028, 0, -0.260533)
+[node name="Item12" parent="." instance=ExtResource("5_k3pds")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.53505, 0.65, 6.8064)

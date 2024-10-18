@@ -1,25 +1,23 @@
 class_name Item extends RigidBody3D
 
 # Item
-@onready var disable_when_picked = [ $Hitbox, ]
+@onready var hitbox = $Hitbox
 @onready var death_timer = $Death
-@onready var death_particles = [ ]
-@onready var remove_on_death = [ ]
 @onready var afterlife_timer = $Afterlife
-@onready var delete_particles = [ $DeleteParticles, ]
-@onready var remove_on_delete = [ $Hitbox, $View, ]
-var is_picked_up = false
+@onready var death_particles = [ $DeathParticles, ]
+@onready var remove_on_death = [ $Hitbox, $View, ]
 var death_duration = 1.0
+var is_picked_up = false
 var is_dead = false
 var is_deleted = false
 
 # Scale
 @onready var scaling_children = [ $Hitbox, $View, ]
 const SCALE_SPEED = 3
-const DEFAULT_SCALE = 1
-const PICKED_UP_SCALE = .6
-var current_scale = DEFAULT_SCALE
-var target_scale = DEFAULT_SCALE
+const SCALE_DEFAULT = 1
+const SCALE_PICKED = .6
+var current_scale = SCALE_DEFAULT
+var target_scale = current_scale
 var is_target_scale_reached = false
 var scale_direction = 0
 
@@ -49,11 +47,16 @@ var animations = {
 
 # Item
 
+func get_type() -> String:
+	# Using metadata bc i believe many items wont be needing a script & i plan to keep most of the code in tiles and other objects
+	return get_meta('type')
+
 func set_hitbox_disabled(value:bool):
-	for shy_child in disable_when_picked:
-		shy_child.disabled = value
+	# Used in player.show_inventory
+	hitbox.disabled = value
 
 # WARNING Not disabling hitbox on picked up items should cause problems like tile activation, doesnt seem to be the case
+# WARNING Tho this does allow collision for inventory items which isnt good
 func set_picked_up(value:bool, disable_hitbox:bool = value):
 	if is_dead: return
 	if is_picked_up == value: return
@@ -65,7 +68,7 @@ func set_picked_up(value:bool, disable_hitbox:bool = value):
 	if is_picked_up:
 		freeze = true
 		wake_up_neighbors()
-		set_target_scale(PICKED_UP_SCALE)
+		set_target_scale(SCALE_PICKED)
 		set_rotation_speed(PICKED_UP_ROTATION_SPEED)
 		linear_velocity = Vector3.ZERO
 		animation_player.play(animations.picked)
@@ -73,7 +76,7 @@ func set_picked_up(value:bool, disable_hitbox:bool = value):
 		freeze = false
 		linear_velocity = Vector3.ZERO
 		stop_moving()
-		set_target_scale(DEFAULT_SCALE)
+		set_target_scale(SCALE_DEFAULT)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
 
@@ -82,17 +85,12 @@ func delete():
 	
 	is_deleted = true
 	is_dead = true
-	
 	afterlife_timer.start(0)
 	animation_player.play(animations.delete)
 	freeze = true
 	for child in remove_on_death:
-		if child == null: continue
-		
 		child.queue_free()
-	for child in remove_on_delete:
-		child.queue_free()
-	for particles in delete_particles:
+	for particles in death_particles:
 		particles.emitting = true
 
 func die(source_object:Object = null, death_time:float = death_duration):
@@ -102,15 +100,10 @@ func die(source_object:Object = null, death_time:float = death_duration):
 		return
 	
 	is_dead = true
-	
+	freeze = true # NOTE Can be removed if you want it bouncy when it hits the lava or smthn
 	death_timer.wait_time = death_time
 	death_timer.start(0)
 	animation_player.play(animations.death)
-	freeze = true # NOTE Can be removed if you want it bouncy when it hits the lava or somthn
-	for child in remove_on_death:
-		child.queue_free()
-	for particles in death_particles:
-		particles.emitting = true
 
 # Scale
 

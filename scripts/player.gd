@@ -6,7 +6,7 @@ class_name Player extends CharacterBody3D
 const SPEED = 5.0
 
 # Physics
-const GRAVITY = 9.8 # cannot assign ProjectSettings.get_setting("physics/3d/default_gravity") to a const directly
+const GRAVITY = 9.8 # Cannot assign ProjectSettings.get_setting("physics/3d/default_gravity") to a const directly
 
 # Rotation
 @onready var camera = $Head/Camera
@@ -33,9 +33,9 @@ var item_picked_distance = 0.0
 # TODO Bring the modifiable_number script from the other project to apply on inventory_size, will also be good for HPs
 # NOTE Could add dynamic inventory radius based on the number of items (plus min max)
 const INVENTORY_RADIUS = 1.0
-const INVENTORY_ADD_FOCUS_RADIUS = .25
+const INVENTORY_ADD_FOCUS_RADIUS = .15
 const INVENTORY_SPEED_DEFAULT = .25
-const INVENTORY_SPEED_FOCUSED = 0
+const INVENTORY_SPEED_FOCUSED = 0.05
 const INVENTORY_POSITION_UP = Vector3(0, 1.85, 0)
 const INVENTORY_POSITION_DOWN = Vector3(0, 0, 0)
 const INVENTORY_FOCUS_ANGLE_UP = 32
@@ -98,7 +98,7 @@ func update_object_aimed():
 		object_aimed = pickup_raycast.get_collider()
 		# WARNING Temporary code
 		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = object_aimed.global_position + Vector3(0, 1.2, 0)
+		$HITPOINT.global_position = object_aimed.global_position + Vector3(0, 1.25, 0)
 	else:
 		object_aimed = null
 		$HITPOINT.global_position = Vector3(0, -10, 0)
@@ -107,7 +107,7 @@ func update_object_aimed():
 		item_aimed = item_picked
 		# WARNING Temporary code
 		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = item_picked.global_position + Vector3(0, 1.2, 0)
+		$HITPOINT.global_position = item_picked.global_position + Vector3(0, 1.25, 0)
 	elif object_aimed is Item:
 		item_aimed = object_aimed 
 	else:
@@ -225,7 +225,7 @@ func remove_item(item:Item = item_aimed):
 
 # Inventory display
 
-# NOTE Function not used anymore
+# NOTE Not used atm
 func show_inventory(value:bool):
 	for item in inventory:
 		item.visible = value
@@ -241,6 +241,17 @@ func set_inventory_displayed(value:bool):
 		inventory_center.position = INVENTORY_POSITION_UP
 		# show_inventory(false)
 
+# Inventory auto collect
+
+# WARNING Only items that have been recently picked up by the player should be detectable by this area
+# This could be fixed by having a delay timer and a bool var on each item, but isnt necesarry as theres probably
+# not gonna be a scenario in game where this can accour
+func _on_auto_collect_body_entered(body:Node3D):
+	if not body is Item: return
+	if body in inventory: return
+	
+	collect_item(body)
+
 # General
 
 func _ready():
@@ -254,12 +265,6 @@ func _physics_process(delta):
 	update_object_aimed()
 	update_item_picked()
 	update_inventory_items()
-
-func _on_auto_collect_body_entered(body:Node3D):
-	if not body is Item: return
-	if body in inventory: return
-	
-	collect_item(body)
 
 func _input(event): # not sure _unhandled_input() is needed
 	if event is InputEventMouseMotion:

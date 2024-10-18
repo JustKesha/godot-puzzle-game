@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://d1xr3m4kwsjly"]
+
+[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://objects/item.tscn" id="1_pehwn"]
+[ext_resource type="PackedScene" uid="uid://dr2ewplefbkwu" path="res://models/KayKit_Restaurant_Bits/stew.fbx" id="2_3x1o6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5xlfl"]
+shading_mode = 0
+albedo_color = Color(0.93845, 0.93845, 0.93845, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qljld"]
+material = SubResource("StandardMaterial3D_5xlfl")
+radial_segments = 6
+rings = 6
+
+[sub_resource type="Curve" id="Curve_k53be"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.185535, 0.7725), 0.0, 0.0, 0, 0, Vector2(0.610063, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[node name="Item" instance=ExtResource("1_pehwn")]
+metadata/type = "STEW"
+
+[node name="Mesh" parent="View/Model" index="0" instance=ExtResource("2_3x1o6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+
+[node name="SteamParticles" type="CPUParticles3D" parent="View" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.319746, 0)
+amount = 4
+lifetime = 2.0
+mesh = SubResource("SphereMesh_qljld")
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.2
+emission_ring_radius = 0.25
+emission_ring_inner_radius = 0.0
+gravity = Vector3(0, 0.35, 0)
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_k53be")

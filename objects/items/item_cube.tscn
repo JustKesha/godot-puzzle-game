@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://domi3vn5pa35q"]
+
+[ext_resource type="PackedScene" uid="uid://bn33rakab2q66" path="res://objects/item.tscn" id="1_qqq2v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f21l1"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rbae3"]
+material = SubResource("StandardMaterial3D_f21l1")
+size = Vector3(0.65, 0.65, 0.65)
+
+[node name="Item" instance=ExtResource("1_qqq2v")]
+metadata/type = "CUBE"
+
+[node name="View" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.175, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="View/Model" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.133883, 0)
+mesh = SubResource("BoxMesh_rbae3")
+skeleton = NodePath("../../../../..")

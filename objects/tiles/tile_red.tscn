@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dpb1gj2icwlp2"]
 
 [ext_resource type="PackedScene" uid="uid://d1p2ieslk0qkt" path="res://objects/tile.tscn" id="1_1ak7b"]
-[ext_resource type="Script" path="res://scripts/tiles/tile_blue.gd" id="2_s4vdt"]
+[ext_resource type="Script" path="res://scripts/tiles/tile_red.gd" id="2_y6u62"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvja4"]
 shading_mode = 0
@@ -24,7 +24,7 @@ material = SubResource("StandardMaterial3D_hekri")
 size = Vector3(2, 0.1, 2)
 
 [node name="Tile" instance=ExtResource("1_1ak7b")]
-script = ExtResource("2_s4vdt")
+script = ExtResource("2_y6u62")
 
 [node name="ActivationParticles" type="CPUParticles3D" parent="." index="0"]
 emitting = false

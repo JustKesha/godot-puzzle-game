@@ -1,7 +1,7 @@
 class_name Tile extends StaticBody3D
 
 # TODO Make it so the tile can detect neghiboring tiles and update when they are updated (Neighbors array)
-# TODO Add death..
+# TODO Add tile death
 
 # Tile
 @onready var holding_timer = $Holding
@@ -18,13 +18,12 @@ const animations = {
 
 # Signals for inherited scenes
 signal created
-signal just_pressed
-signal just_unpressed
-# signal being_pressed (by_objects:Object)
+signal just_pressed (object_pressing:Object)
+signal just_unpressed (object_left:Object)
+# signal being_pressed (object_pressing:Object)
 # signal idle
 
 # Tile
-# Func names in this block are a bit confusing, consider renaming / restructuring
 
 func set_is_pressed(value:bool):
 	if is_pressed == value: return
@@ -35,8 +34,8 @@ func set_is_pressed(value:bool):
 		is_pressed = true
 		
 		var object_pressing = pressed_by[0]
-		if object_pressing is Item:
-			object_pressing.die(self)
+		
+		just_pressed.emit(object_pressing)
 		
 		if is_pressed_before != is_pressed:
 			print(type, ' tile pressed by ', object_pressing.name)
