@@ -14,7 +14,7 @@ shader = ExtResource("2_5e1bt")
 material = SubResource("ShaderMaterial_842so")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dt7bg"]
-size = Vector3(0.75, 3.5, 0.75)
+size = Vector3(0.75, 3, 0.75)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tlmv"]
 albedo_color = Color(1, 0.23477, 0.265317, 1)
@@ -77,14 +77,13 @@ mesh = SubResource("QuadMesh_smjwk")
 skeleton = NodePath("../..")
 
 [node name="Inventory" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="AutoCollect" type="Area3D" parent="Inventory"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
+[node name="AutoCollect" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
 collision_layer = 0
 collision_mask = 4
 
-[node name="Hitbox" type="CollisionShape3D" parent="Inventory/AutoCollect"]
+[node name="Hitbox" type="CollisionShape3D" parent="AutoCollect"]
 shape = SubResource("BoxShape3D_dt7bg")
 
 [node name="HITPOINT" type="Node3D" parent="."]
@@ -121,4 +120,4 @@ libraries = {
 "": SubResource("AnimationLibrary_vgpmo")
 }
 
-[connection signal="body_entered" from="Inventory/AutoCollect" to="." method="_on_auto_collect_body_entered"]
+[connection signal="body_entered" from="AutoCollect" to="." method="_on_auto_collect_body_entered"]

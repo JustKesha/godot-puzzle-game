@@ -49,16 +49,18 @@ var animations = {
 
 # Item
 
-# BUG Not disabling hitbox on pickup (to be able to hit pickup raycast from inventory) can cause problems (like tile tile activation by picked up items)
-# TODO Think of a better aproach instead of disable_children arg
-func set_picked_up(value:bool, disable_children:bool = value):
+func set_hitbox_disabled(value:bool):
+	for shy_child in disable_when_picked:
+		shy_child.disabled = value
+
+# WARNING Not disabling hitbox on picked up items should cause problems like tile activation, doesnt seem to be the case
+func set_picked_up(value:bool, disable_hitbox:bool = value):
 	if is_dead: return
 	if is_picked_up == value: return
 	
 	is_picked_up = value
 	
-	for shy_child in disable_when_picked:
-		shy_child.disabled = disable_children
+	set_hitbox_disabled(disable_hitbox)
 	
 	if is_picked_up:
 		freeze = true
@@ -74,8 +76,6 @@ func set_picked_up(value:bool, disable_children:bool = value):
 		set_target_scale(DEFAULT_SCALE)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
-	
-	print('Picked up ' if is_picked_up else 'Dropped ', name)
 
 func delete():
 	if is_deleted: return

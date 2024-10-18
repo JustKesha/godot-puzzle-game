@@ -29,13 +29,16 @@ var item_picked:Item
 var item_picked_distance = 0.0
 
 # Inventory
-@onready var inventory_center_mark = $Inventory
+@onready var inventory_center = $Inventory
 # TODO Add dynamic inventory radius (plus max and min radius)
 const INVENTORY_RADIUS = 1.0
 const INVENTORY_FOCUS_ANGLE_X = 20
 const INVENTORY_SPEED_DEFAULT = .35
 const INVENTORY_SPEED_FOCUSED = .05
+const INVENTORY_POSITION_UP = Vector3(0, 1.75, 0)
+const INVENTORY_POSITION_DOWN = Vector3(0, 0, 0)
 var inventory = []
+var is_inventory_displayed = false
 var inventory_spin_speed = INVENTORY_SPEED_DEFAULT
 var inventory_spin_offset = 0.0
 
@@ -124,22 +127,25 @@ func pick_up_item(item:Item = item_aimed):
 	if item.is_dead:
 		print('ERROR: Tried to pick up a dead item')
 		return
+	if item_picked != null:
+		drop_item_picked()
 	if item in inventory:
 		remove_item(item)
 	
 	item_picked = item
-	
 	item_picked_distance = camera.global_position.distance_to(item.global_position)
-	
 	item_picked.set_picked_up(true)
+	
+	print('Picked up ', item.name)
 
 func drop_item_picked():
 	if item_picked == null:
 		print('ERROR: Tried to drop a null object')
 		return
 	
-	item_picked.set_picked_up(false)
+	print('Dropped ', item_picked.name)
 	
+	item_picked.set_picked_up(false)
 	item_picked = null
 
 # Inventory
@@ -147,7 +153,7 @@ func drop_item_picked():
 func update_inventory_items():
 	if inventory.size() == 0: return
 	
-	var center = inventory_center_mark.global_position
+	var center = inventory_center.global_position
 	var radius = INVENTORY_RADIUS
 	var offset = inventory_spin_offset
 	var index  = 0
@@ -203,16 +209,29 @@ func remove_item(item:Item = item_aimed):
 	if inventory.size() > 0:
 		print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
-func _on_auto_collect_body_entered(body:Node3D):
-	if not body is Item: return
-	if body in inventory: return
+# Inventory display
+
+# NOTE Function not used anymore
+func show_inventory(value:bool):
+	for item in inventory:
+		item.visible = value
+		item.set_hitbox_disabled(!value)
+
+func set_inventory_dispaly(value:bool):
+	is_inventory_displayed = value
 	
-	collect_item(body)
+	if is_inventory_displayed:
+		inventory_center.position = INVENTORY_POSITION_DOWN
+		# show_inventory(true)
+	else:
+		inventory_center.position = INVENTORY_POSITION_UP
+		# show_inventory(false)
 
 # General
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	set_inventory_dispaly(false)
 
 func _physics_process(delta):
 	apply_gravity(delta)
@@ -222,15 +241,31 @@ func _physics_process(delta):
 	update_item_picked()
 	update_inventory_items()
 
+func _on_auto_collect_body_entered(body:Node3D):
+	if not body is Item: return
+	if body in inventory: return
+	
+	collect_item(body)
+
 func _input(event): # not sure _unhandled_input() is needed
 	if event is InputEventMouseMotion:
 		apply_rotation(event)
+	
+	elif event.is_action_pressed("pick_up"):
+		pick_up_item()
+	elif event.is_action_released("pick_up"):
+		drop_item_picked()
+	
 	elif event.is_action_released("collect"):
 		if item_aimed in inventory:
 			remove_item()
 		else:
 			collect_item()
-	elif event.is_action_pressed("pick_up"):
-		pick_up_item()
-	elif event.is_action_released("pick_up"):
-		drop_item_picked()
+	
+	elif event.is_action_pressed("inventory"):
+		set_inventory_dispaly(true)
+	elif event.is_action_released("inventory"):
+		set_inventory_dispaly(false)
+
+	elif event.is_action_pressed("inventory_toggle"):
+		set_inventory_dispaly(!is_inventory_displayed)

@@ -57,7 +57,7 @@ func set_is_pressed(value:bool):
 func add_object_pressing(object:Object):
 	if object == null: return
 	if object in pressed_by: return
-	if object is Item and object.is_dead: return
+	if object is Item and (object.is_dead or object.is_picked_up): return
 	
 	pressed_by.append(object)
 	set_is_pressed(true)
@@ -87,9 +87,11 @@ func _ready() -> void:
 	created.emit()
 
 func _on_detector_body_entered(body:Node3D) -> void:
+	print(body)
 	add_object_pressing(body)
 
 func _on_detector_body_exited(body:Node3D) -> void:
+	print(body)
 	remove_object_pressing(body)
 
 func _on_holding_timeout() -> void:
