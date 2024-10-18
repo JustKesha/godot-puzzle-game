@@ -153,18 +153,15 @@ func apply_rotation():
 
 # Movement
 
-func are_vectors_roughly_equal(vector_a:Vector3, vector_b:Vector3) -> bool:
-	var accuracy = Vector3(
-		0.1 ** POSITION_ACCURACY,
-		0.1 ** POSITION_ACCURACY,
-		0.1 ** POSITION_ACCURACY,
-	)
-	return snapped(vector_a, accuracy) == snapped(vector_b, accuracy)
+func are_vectors_roughly_equal(vector_a:Vector3, vector_b:Vector3, accuracy:float) -> bool:
+	var accuracy_vec = Vector3(0.1 ** accuracy, 0.1 ** accuracy, 0.1 ** accuracy)
+	
+	return snapped(vector_a, accuracy_vec) == snapped(vector_b, accuracy_vec)
 
 # NOTE Could perhaps do movement with forces to be able to use it in non picked state
 func update_position(delta:float):
 	if not is_in_manual_motion: return
-	if are_vectors_roughly_equal(global_position, target_position):
+	if are_vectors_roughly_equal(global_position, target_position, POSITION_ACCURACY):
 		stop_moving()
 		return
 	

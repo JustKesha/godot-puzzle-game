@@ -87,11 +87,9 @@ func _ready() -> void:
 	created.emit()
 
 func _on_detector_body_entered(body:Node3D) -> void:
-	print(body)
 	add_object_pressing(body)
 
 func _on_detector_body_exited(body:Node3D) -> void:
-	print(body)
 	remove_object_pressing(body)
 
 func _on_holding_timeout() -> void:

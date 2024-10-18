@@ -30,13 +30,16 @@ var item_picked_distance = 0.0
 
 # Inventory
 @onready var inventory_center = $Inventory
-# TODO Add dynamic inventory radius (plus max and min radius)
+# TODO Bring the modifiable_number script from the other project to apply on inventory_size, will also be good for HPs
+# NOTE Could add dynamic inventory radius based on the number of items (plus min max)
 const INVENTORY_RADIUS = 1.0
-const INVENTORY_FOCUS_ANGLE_X = 20
-const INVENTORY_SPEED_DEFAULT = .35
-const INVENTORY_SPEED_FOCUSED = .05
-const INVENTORY_POSITION_UP = Vector3(0, 1.75, 0)
+const INVENTORY_ADD_FOCUS_RADIUS = .25
+const INVENTORY_SPEED_DEFAULT = .25
+const INVENTORY_SPEED_FOCUSED = 0
+const INVENTORY_POSITION_UP = Vector3(0, 1.85, 0)
 const INVENTORY_POSITION_DOWN = Vector3(0, 0, 0)
+const INVENTORY_FOCUS_ANGLE_UP = 32
+const INVENTORY_FOCUS_ANGLE_DOWN = -18
 var inventory = []
 var is_inventory_displayed = false
 var inventory_spin_speed = INVENTORY_SPEED_DEFAULT
@@ -153,10 +156,21 @@ func drop_item_picked():
 func update_inventory_items():
 	if inventory.size() == 0: return
 	
+	# NOTE Consider moving this into an update_inventory_focus func
+	
+	var is_inventory_focused = false
+	var camera_angle = rad_to_deg(get_vertical_rotation())
+	
+	if is_inventory_displayed:
+		if camera_angle <= INVENTORY_FOCUS_ANGLE_DOWN:
+			is_inventory_focused = true
+	else:
+		if camera_angle >= INVENTORY_FOCUS_ANGLE_UP:
+			is_inventory_focused = true
+	
 	var center = inventory_center.global_position
-	var radius = INVENTORY_RADIUS
+	var radius = INVENTORY_RADIUS + (INVENTORY_ADD_FOCUS_RADIUS if is_inventory_focused else 0)
 	var offset = inventory_spin_offset
-	var index  = 0
 	# WARNING Careful, angles.size doesnt always equal to inventory.size;
 	# Godot range func transforms all args into int (will result in more arguments than expected if inventory.size is equal to 7 or 11)
 	var angles = range(0, 360, 360 / inventory.size())
@@ -171,10 +185,10 @@ func update_inventory_items():
 		
 		item.move_to_position(pos)
 	
-	# Could put this in apply_rotation, but there would be no difference
-	inventory_spin_speed = INVENTORY_SPEED_FOCUSED if rad_to_deg(get_vertical_rotation()) >= INVENTORY_FOCUS_ANGLE_X else INVENTORY_SPEED_DEFAULT
+	inventory_spin_speed = INVENTORY_SPEED_FOCUSED if is_inventory_focused else INVENTORY_SPEED_DEFAULT
 	inventory_spin_offset += inventory_spin_speed
 
+# NOTE Consider renaming to remove_inventory_item & add_inventory_item
 func collect_item(item:Item = item_aimed):
 	if item == null:
 		print('ERROR: Tried to collect a null item')
@@ -182,7 +196,8 @@ func collect_item(item:Item = item_aimed):
 	if item in inventory:
 		print('ERROR: Tried to collect an item already in inventory')
 		return
-	# TODO Dont like console spam with drop pick collect, should be collect / pick collect
+	# Not really good (*LMK* -> pick -> *E* -> drop -> pick -> collect)
+	# Needed bc item pick up state is changed below with the second optional argument provided
 	if item == item_picked:
 		drop_item_picked()
 	
@@ -193,7 +208,6 @@ func collect_item(item:Item = item_aimed):
 	print('Collected ', item.name)
 	print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
-# TODO Consider a name change
 func remove_item(item:Item = item_aimed):
 	if item == null:
 		print('ERROR: Tried to remove a null item')
@@ -217,7 +231,7 @@ func show_inventory(value:bool):
 		item.visible = value
 		item.set_hitbox_disabled(!value)
 
-func set_inventory_dispaly(value:bool):
+func set_inventory_displayed(value:bool):
 	is_inventory_displayed = value
 	
 	if is_inventory_displayed:
@@ -231,7 +245,7 @@ func set_inventory_dispaly(value:bool):
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	set_inventory_dispaly(false)
+	set_inventory_displayed(false)
 
 func _physics_process(delta):
 	apply_gravity(delta)
@@ -263,9 +277,9 @@ func _input(event): # not sure _unhandled_input() is needed
 			collect_item()
 	
 	elif event.is_action_pressed("inventory"):
-		set_inventory_dispaly(true)
+		set_inventory_displayed(true)
 	elif event.is_action_released("inventory"):
-		set_inventory_dispaly(false)
+		set_inventory_displayed(false)
 
 	elif event.is_action_pressed("inventory_toggle"):
-		set_inventory_dispaly(!is_inventory_displayed)
+		set_inventory_displayed(!is_inventory_displayed)
