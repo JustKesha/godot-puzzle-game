@@ -105,6 +105,9 @@ scale_amount_min = 0.25
 scale_amount_max = 0.5
 scale_amount_curve = SubResource("Curve_4tmie")
 
+[node name="PickupCD" type="Timer" parent="."]
+one_shot = true
+
 [node name="Death" type="Timer" parent="."]
 one_shot = true
 
@@ -124,5 +127,6 @@ collision_mask = 4
 [node name="Hitbox" type="CollisionShape3D" parent="Neighborhood"]
 shape = SubResource("SphereShape3D_5mtwp")
 
+[connection signal="timeout" from="PickupCD" to="." method="_on_pickup_cd_timeout"]
 [connection signal="timeout" from="Death" to="." method="_on_death_timeout"]
 [connection signal="timeout" from="Afterlife" to="." method="_on_afterlife_timeout"]

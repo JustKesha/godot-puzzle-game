@@ -188,34 +188,37 @@ func update_inventory_items():
 	inventory_spin_offset += inventory_spin_speed
 
 # NOTE Consider renaming to remove_inventory_item & add_inventory_item
-func collect_item(item:Item = item_aimed):
+func collect_item(item:Item = item_aimed, soft_action:bool = false):
 	if item == null:
 		print('ERROR: Tried to collect a null item')
 		return
 	if item in inventory:
 		print('ERROR: Tried to collect an item already in inventory')
 		return
-	# Not really good (*LMK* -> pick -> *E* -> drop -> pick -> collect)
-	# Needed bc item pick up state is changed below with the second optional argument provided
+	# Works like (*LMK* pick -> *E* drop pick collect) should logically be (*LMK* pick -> *E* collect)
+	# Extra drop needed bc third optional argument provided in item.set_picked_up below
 	if item == item_picked:
 		drop_item_picked()
-	
-	item.set_picked_up(true, false)
+	if !item.set_picked_up(true, soft_action, false):
+		print('ERROR: Couldnt pick up an item')
+		return
 	
 	inventory.append(item)
 	
 	print('Collected ', item.name)
 	print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
-func remove_item(item:Item = item_aimed):
+func remove_item(item:Item = item_aimed, soft_action:bool = false):
 	if item == null:
 		print('ERROR: Tried to remove a null item')
 		return
 	if not item in inventory:
 		print('ERROR: Tried to remove an item that is not in inventory')
 		return
+	if !item.set_picked_up(false, soft_action):
+		print('ERROR: Couldnt remove an item')
+		return
 	
-	item.set_picked_up(false)
 	inventory.erase(item)
 	
 	print('Removed ', item.name, ' from inventory')
@@ -249,7 +252,7 @@ func _on_auto_collect_body_entered(body:Node3D):
 	if not body is Item: return
 	if body in inventory: return
 	
-	collect_item(body)
+	collect_item(body, true)
 
 # General
 
@@ -276,9 +279,9 @@ func _input(event): # not sure _unhandled_input() is needed
 	
 	elif event.is_action_released("collect"):
 		if item_aimed in inventory:
-			remove_item()
+			remove_item(item_aimed, true)
 		else:
-			collect_item()
+			collect_item(item_aimed, true)
 	
 	elif event.is_action_pressed("inventory"):
 		set_inventory_displayed(true)

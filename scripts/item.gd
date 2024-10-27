@@ -2,12 +2,15 @@ class_name Item extends RigidBody3D
 
 # Item
 @onready var hitbox = $Hitbox
+@onready var pickup_cd_timer = $PickupCD
 @onready var death_timer = $Death
 @onready var afterlife_timer = $Afterlife
 @onready var death_particles = [ $DeathParticles, ]
 @onready var remove_on_death = [ $Hitbox, $View, ]
+const DEFAULT_PICKUP_CD = 0.5
 var death_duration = 1.0
 var is_picked_up = false
+var is_on_pickup_cd = false
 var is_dead = false
 var is_deleted = false
 
@@ -53,17 +56,18 @@ func get_type() -> String:
 	return get_meta('type')
 
 func set_hitbox_disabled(value:bool):
-	# Used in player.show_inventory
+	# Used in player.show_inventory, but player.show_inventory is never used atm
 	hitbox.disabled = value
 
 # WARNING Not disabling hitbox on picked up items should cause problems like tile activation, doesnt seem to be the case
-# WARNING Tho this does allow collision for inventory items which isnt good
-func set_picked_up(value:bool, disable_hitbox:bool = value):
-	if is_dead: return
-	if is_picked_up == value: return
+# Tho this does allow collision for inventory items which isnt good
+func set_picked_up(value:bool, soft_action:bool = false, disable_hitbox:bool = value) -> bool:
+	if is_dead: return false
+	if is_on_pickup_cd and soft_action: return false
+	if is_picked_up == value: return false
 	
 	is_picked_up = value
-	
+	set_on_pickup_cd()
 	set_hitbox_disabled(disable_hitbox)
 	
 	if is_picked_up:
@@ -80,6 +84,22 @@ func set_picked_up(value:bool, disable_hitbox:bool = value):
 		set_target_scale(SCALE_DEFAULT)
 		set_rotation_speed(DEFAULT_ROTATION_SPEED)
 		animation_player.play(animations.default)
+	
+	return true
+
+func set_on_pickup_cd(duration:float = DEFAULT_PICKUP_CD):
+	if duration == 0:
+		pickup_cd_timer.stop()
+		is_on_pickup_cd = false
+		return
+	
+	is_on_pickup_cd = true
+	pickup_cd_timer.wait_time = duration
+	pickup_cd_timer.start(0)
+
+# For ease of use
+func reset_pickup_cd():
+	set_on_pickup_cd(0)
 
 func delete():
 	if is_deleted: return
@@ -206,3 +226,6 @@ func _on_death_timeout() -> void:
 
 func _on_afterlife_timeout() -> void:
 	queue_free()
+
+func _on_pickup_cd_timeout() -> void:
+	is_on_pickup_cd = false
