@@ -23,6 +23,7 @@ var bobbing_offset = 0.0
 # Items
 @onready var pickup_raycast = $Head/Camera/PickupRaycast
 @onready var pickup_lock_object = camera
+const ITEM_PICKED_SPEED = 7.5
 var object_aimed:Object
 var item_aimed:Item
 var item_picked:Item
@@ -32,17 +33,18 @@ var item_picked_distance = 0.0
 @onready var inventory_center = $Inventory
 # TODO Bring the modifiable_number script from the other project to apply on inventory_size, will also be good for HPs
 # NOTE Could add dynamic inventory radius based on the number of items (plus min max)
+const INVENTORY_ITEM_SPEED = 4.5
 const INVENTORY_RADIUS = 1.0
-const INVENTORY_ADD_FOCUS_RADIUS = .15
-const INVENTORY_SPEED_DEFAULT = .25
-const INVENTORY_SPEED_FOCUSED = 0.05
+const INVENTORY_ADD_FOCUS_RADIUS = .2
+const INVENTORY_ROTATION_SPEED_DEFAULT = .25
+const INVENTORY_ROTATION_SPEED_FOCUSED = 0.05
 const INVENTORY_POSITION_UP = Vector3(0, 1.85, 0)
 const INVENTORY_POSITION_DOWN = Vector3(0, 0, 0)
 const INVENTORY_FOCUS_ANGLE_UP = 32
 const INVENTORY_FOCUS_ANGLE_DOWN = -18
 var inventory = []
 var is_inventory_displayed = false
-var inventory_spin_speed = INVENTORY_SPEED_DEFAULT
+var inventory_spin_speed = INVENTORY_ROTATION_SPEED_DEFAULT
 var inventory_spin_offset = 0.0
 
 # Movement
@@ -121,7 +123,7 @@ func get_picked_up_item_lock_position() -> Vector3:
 func update_item_picked():
 	if item_picked == null: return
 	
-	item_picked.move_to_position(get_picked_up_item_lock_position())
+	item_picked.move_to_position(get_picked_up_item_lock_position(), ITEM_PICKED_SPEED)
 
 func pick_up_item(item:Item = item_aimed):
 	if item == null:
@@ -183,9 +185,9 @@ func update_inventory_items():
 			center.z + radius * sin(deg_to_rad(angles[i] + offset))
 		)
 		
-		item.move_to_position(pos)
+		item.move_to_position(pos, INVENTORY_ITEM_SPEED)
 	
-	inventory_spin_speed = INVENTORY_SPEED_FOCUSED if is_inventory_focused else INVENTORY_SPEED_DEFAULT
+	inventory_spin_speed = INVENTORY_ROTATION_SPEED_FOCUSED if is_inventory_focused else INVENTORY_ROTATION_SPEED_DEFAULT
 	inventory_spin_offset += inventory_spin_speed
 
 # NOTE Consider renaming to remove_inventory_item & add_inventory_item

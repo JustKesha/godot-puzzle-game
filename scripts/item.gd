@@ -28,8 +28,9 @@ const PICKED_UP_ROTATION_SPEED = -DEFAULT_ROTATION_SPEED / 2
 var rotation_speed = DEFAULT_ROTATION_SPEED
 
 # Movement
-const SPEED = 7.5
+const DEFAULT_SPEED = 5.0
 const POSITION_ACCURACY = 3.0
+var speed = DEFAULT_SPEED
 var target_position = Vector3.ZERO
 var is_in_manual_motion = false
 
@@ -158,13 +159,14 @@ func update_position(delta:float):
 		stop_moving()
 		return
 	
-	global_position = global_position.lerp(target_position, SPEED * delta)
+	global_position = global_position.lerp(target_position, speed * delta)
 	linear_velocity = Vector3.ZERO
 
 func set_to_position(position_vector:Vector3):
 	global_position = position_vector
 
-func move_to_position(position_vector:Vector3):
+func move_to_position(position_vector:Vector3, new_speed:float = DEFAULT_SPEED):
+	speed = new_speed
 	target_position = position_vector
 	is_in_manual_motion = true
 	freeze = true
