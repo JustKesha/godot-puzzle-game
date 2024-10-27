@@ -1,6 +1,6 @@
 class_name Player extends CharacterBody3D
 
-# TODO Add proper functions for HITPOINT, temporary at least
+# NOTE Would probably be better separated into modules
 
 # Movement
 const SPEED = 5.0
@@ -21,6 +21,7 @@ const BOBBING_AMPLITUDE = 0.064
 var bobbing_offset = 0.0
 
 # Items
+@onready var object_pointer = $Pointer
 @onready var pickup_raycast = $Head/Camera/PickupRaycast
 @onready var pickup_lock_object = camera
 const ITEM_PICKED_SPEED = 7.5
@@ -98,18 +99,14 @@ func apply_head_bobbing(delta:float):
 func update_object_aimed():
 	if pickup_raycast.is_colliding():
 		object_aimed = pickup_raycast.get_collider()
-		# WARNING Temporary code
-		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = object_aimed.global_position + Vector3(0, 1.25, 0)
+		object_pointer.point_at(object_aimed)
 	else:
 		object_aimed = null
-		$HITPOINT.global_position = Vector3(0, -10, 0)
+		object_pointer.rest()
 	
 	if item_picked != null:
 		item_aimed = item_picked
-		# WARNING Temporary code
-		$HITPOINT/Animator.play("POINT")
-		$HITPOINT.global_position = item_picked.global_position + Vector3(0, 1.25, 0)
+		object_pointer.point_at(item_picked)
 	elif object_aimed is Item:
 		item_aimed = object_aimed 
 	else:

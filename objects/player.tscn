@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://n8la4p4qmdef"]
+[gd_scene load_steps=8 format=3 uid="uid://n8la4p4qmdef"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_xtcfu"]
 [ext_resource type="Shader" path="res://shaders/pixelate.gdshader" id="2_5e1bt"]
+[ext_resource type="PackedScene" uid="uid://bj2btsucd7l1b" path="res://objects/pointer.tscn" id="3_wmgv5"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_pl030"]
 points = PackedVector3Array(-0.125207, -0.532801, -0.480507, 0.0227831, 0.47607, 0.498884, 0.169713, 0.559144, 0.464172, 0.231051, -0.803591, 0.320455, 0.40741, 0.651043, -0.243523, -0.482789, 0.594843, 0.0822132, -0.362868, -0.682312, 0.289697, 0.469044, -0.654529, -0.0662713, -0.127444, 0.842701, -0.338103, -0.393435, -0.683942, -0.244717, 0.438255, 0.623309, 0.200849, 0.0841477, 0.977454, 0.114795, -0.0682023, -0.976458, -0.12927, 0.20055, -0.563129, -0.451454, -0.185527, 0.595453, -0.453475, -0.273363, 0.592268, 0.407754, -0.00693649, -0.476823, 0.49966, 0.375821, -0.588614, 0.316955, 0.111579, 0.563059, -0.481177, -0.41725, 0.527866, -0.270497, -0.484546, -0.596972, -0.0665097, -0.279747, 0.908561, 0.0533361, -0.250197, -0.880712, 0.205319, 0.263647, -0.902771, -0.127394, 0.293368, 0.871526, -0.157196, 0.373412, -0.526319, -0.328246, 0.499663, 0.476641, -0.00688856, 0.0531056, 0.875001, 0.324703, -0.154543, -0.590854, 0.465879, -0.0972799, -0.782358, -0.398188, -0.387649, -0.498171, 0.31565, -0.30068, -0.587995, -0.388901)
@@ -15,41 +16,6 @@ material = SubResource("ShaderMaterial_842so")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dt7bg"]
 size = Vector3(0.75, 3, 0.75)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tlmv"]
-albedo_color = Color(1, 0.23477, 0.265317, 1)
-
-[sub_resource type="PrismMesh" id="PrismMesh_d774d"]
-material = SubResource("StandardMaterial3D_1tlmv")
-size = Vector3(0.4, 0.3, 0.1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yka7p"]
-albedo_color = Color(1, 0.235294, 0.266667, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_kayg8"]
-material = SubResource("StandardMaterial3D_yka7p")
-size = Vector3(0.1, 0.35, 0.1)
-
-[sub_resource type="Animation" id="Animation_fovwa"]
-resource_name = "POINT"
-length = 0.5
-loop_mode = 1
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.25, 1, 0, 0.1, 0, 0.5, 1, 0, 0, 0)
-
-[sub_resource type="Animation" id="Animation_3xbmy"]
-length = 0.001
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_vgpmo"]
-_data = {
-"POINT": SubResource("Animation_fovwa"),
-"RESET": SubResource("Animation_3xbmy")
-}
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -86,38 +52,6 @@ collision_mask = 4
 [node name="Hitbox" type="CollisionShape3D" parent="AutoCollect"]
 shape = SubResource("BoxShape3D_dt7bg")
 
-[node name="HITPOINT" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021807, 0)
-
-[node name="Model" type="Node3D" parent="HITPOINT"]
-
-[node name="Light1" type="SpotLight3D" parent="HITPOINT/Model"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.708126, 0)
-visible = false
-light_color = Color(1, 0.752831, 0.482143, 1)
-light_energy = 2.0
-spot_angle = 35.0
-
-[node name="Light2" type="OmniLight3D" parent="HITPOINT/Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.42109e-14, -0.584979, 0.253948)
-visible = false
-light_energy = 0.25
-omni_range = 1.0
-
-[node name="ARROW_HEAD" type="MeshInstance3D" parent="HITPOINT/Model"]
-transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, 0, -0.4, 0)
-mesh = SubResource("PrismMesh_d774d")
-skeleton = NodePath("../../..")
-
-[node name="ARROW_SHAFT" type="MeshInstance3D" parent="HITPOINT/Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
-mesh = SubResource("BoxMesh_kayg8")
-skeleton = NodePath("../../..")
-
-[node name="Animator" type="AnimationPlayer" parent="HITPOINT"]
-root_node = NodePath("../Model/ARROW_SHAFT")
-libraries = {
-"": SubResource("AnimationLibrary_vgpmo")
-}
+[node name="Pointer" parent="." instance=ExtResource("3_wmgv5")]
 
 [connection signal="body_entered" from="AutoCollect" to="." method="_on_auto_collect_body_entered"]
