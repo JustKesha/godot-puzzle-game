@@ -104,6 +104,8 @@ func update_object_aimed():
 		object_aimed = pickup_raycast.get_collider()
 		if object_aimed is Item or object_aimed is Tile:
 			object_pointer.point_at(object_aimed)
+		else:
+			object_pointer.rest()
 	elif object_aimed != null:
 		object_aimed = null
 		object_pointer.rest()
