@@ -3,11 +3,17 @@ class_name Tile extends StaticBody3D
 # TODO Make it so the tile can detect neghiboring tiles and update when they are updated (Neighbors array)
 # TODO Add tile death
 
-# Tile
+# Activation
 @onready var holding_timer = $Holding
 var pressed_by = []
 var type = 'DEFAULT'
 var is_pressed = false
+
+# Death
+@onready var afterlife_timer = $Afterlife
+@onready var death_particles = $DeathParticles
+@onready var remove_on_death = [ $View ]
+var is_dead = false
 
 # Animations
 @onready var animation_player = $Animator
@@ -23,7 +29,7 @@ signal just_unpressed (object_left:Object)
 # signal being_pressed (object_pressing:Object)
 # signal idle
 
-# Tile
+# Activation
 
 func set_is_pressed(value:bool):
 	if is_pressed == value: return
@@ -66,6 +72,22 @@ func remove_object_pressing(object:Object):
 	
 	set_is_pressed(false)
 
+# Death
+
+func delete():
+	is_dead = true
+	queue_free()
+
+func die():
+	if is_dead: return
+	
+	is_dead = true
+	
+	afterlife_timer.start()
+	death_particles.emitting = true
+	for child in remove_on_death:
+		child.queue_free()
+
 # Holding
 
 # NOTE Could add an id arg
@@ -93,3 +115,6 @@ func _on_detector_body_exited(body:Node3D) -> void:
 
 func _on_holding_timeout() -> void:
 	remove_object_pressing(holding_timer)
+
+func _on_afterlife_timeout() -> void:
+	delete()

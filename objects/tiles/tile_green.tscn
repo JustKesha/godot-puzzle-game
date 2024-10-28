@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://chiuv7jths76p"]
+
+[ext_resource type="PackedScene" uid="uid://d1p2ieslk0qkt" path="res://objects/tile.tscn" id="1_dfna4"]
+[ext_resource type="Script" path="res://scripts/tiles/tile_green.gd" id="2_j7wxc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvja4"]
+shading_mode = 0
+albedo_color = Color(0.455279, 0.000449373, 0.000246093, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qpbnb"]
+material = SubResource("StandardMaterial3D_rvja4")
+radial_segments = 8
+rings = 8
+
+[sub_resource type="Curve" id="Curve_0j4lb"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.254717, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1oakg"]
+albedo_color = Color(0.427451, 0.717647, 0.152941, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ayvkr"]
+material = SubResource("StandardMaterial3D_1oakg")
+size = Vector3(2, 0.1, 2)
+
+[node name="Tile" instance=ExtResource("1_dfna4")]
+script = ExtResource("2_j7wxc")
+
+[node name="ActivationParticles" type="CPUParticles3D" parent="." index="0"]
+emitting = false
+amount = 16
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.35
+mesh = SubResource("SphereMesh_qpbnb")
+emission_shape = 3
+emission_box_extents = Vector3(0.65, 0.1, 0.65)
+direction = Vector3(0, 1, 0)
+spread = 0.0
+gravity = Vector3(0, 0.05, 0)
+scale_amount_min = 0.4
+scale_amount_max = 0.7
+scale_amount_curve = SubResource("Curve_0j4lb")
+
+[node name="Color" type="MeshInstance3D" parent="View" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_ayvkr")
+skeleton = NodePath("../../..")
+
+[connection signal="created" from="." to="." method="_on_created"]
+[connection signal="just_pressed" from="." to="." method="_on_just_pressed"]

@@ -102,7 +102,7 @@ func apply_head_bobbing(delta:float):
 func update_object_aimed():
 	if pickup_raycast.is_colliding():
 		object_aimed = pickup_raycast.get_collider()
-		if object_aimed is Item or object_aimed is Tile:
+		if (object_aimed is Item or object_aimed is Tile) and !object_aimed.is_dead:
 			object_pointer.point_at(object_aimed)
 		else:
 			object_pointer.rest()

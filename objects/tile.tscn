@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d1p2ieslk0qkt"]
+[gd_scene load_steps=11 format=3 uid="uid://d1p2ieslk0qkt"]
 
 [ext_resource type="Script" path="res://scripts/tile.gd" id="1_5igtn"]
 
@@ -48,6 +48,19 @@ _data = {
 "UP": SubResource("Animation_k3xgi")
 }
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t04v"]
+shading_mode = 0
+albedo_color = Color(0.937255, 0.937255, 0.937255, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dkr1x"]
+material = SubResource("StandardMaterial3D_5t04v")
+radial_segments = 6
+rings = 6
+
+[sub_resource type="Curve" id="Curve_bli0a"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.144654, 1), 0.0, 0.0, 0, 0, Vector2(0.845912, 0.504375), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
 [node name="Tile" type="StaticBody3D"]
 collision_layer = 8
 collision_mask = 0
@@ -77,7 +90,30 @@ libraries = {
 [node name="Holding" type="Timer" parent="."]
 one_shot = true
 
+[node name="Afterlife" type="Timer" parent="."]
+wait_time = 7.0
+
+[node name="DeathParticles" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 16
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.5
+mesh = SubResource("SphereMesh_dkr1x")
+emission_shape = 3
+emission_box_extents = Vector3(0.75, 0.1, 0.75)
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0.5, 0)
+initial_velocity_min = 0.25
+initial_velocity_max = 1.0
+scale_amount_min = 0.25
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_bli0a")
+
 [connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="Detector" to="." method="_on_detector_body_exited"]
 [connection signal="animation_changed" from="Animator" to="." method="_on_animator_animation_changed"]
 [connection signal="timeout" from="Holding" to="." method="_on_holding_timeout"]
+[connection signal="timeout" from="Afterlife" to="." method="_on_afterlife_timeout"]
