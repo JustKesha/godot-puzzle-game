@@ -99,17 +99,19 @@ func apply_head_bobbing(delta:float):
 func update_object_aimed():
 	if pickup_raycast.is_colliding():
 		object_aimed = pickup_raycast.get_collider()
-		object_pointer.point_at(object_aimed)
-	else:
+		if object_aimed is Item or object_aimed is Tile:
+			object_pointer.point_at(object_aimed)
+	elif object_aimed != null:
 		object_aimed = null
 		object_pointer.rest()
 	
 	if item_picked != null:
 		item_aimed = item_picked
-		object_pointer.point_at(item_picked)
+		# Bring back if you want the arrow to point at the picked up item
+		# object_pointer.point_at(item_picked)
 	elif object_aimed is Item:
 		item_aimed = object_aimed 
-	else:
+	elif item_aimed != null:
 		item_aimed = null
 
 func get_picked_up_item_lock_position() -> Vector3:
