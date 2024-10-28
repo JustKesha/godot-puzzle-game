@@ -1,0 +1,85 @@
+[gd_scene load_steps=10 format=3 uid="uid://d3wj6luigc1wl"]
+
+[ext_resource type="Shader" path="res://shaders/pixelate.gdshader" id="1_ki2ub"]
+[ext_resource type="Texture2D" uid="uid://bd4815a0k4uvw" path="res://textures/grass.jpg" id="1_ojhgu"]
+[ext_resource type="Script" path="res://scripts/menu.gd" id="3_toh8j"]
+[ext_resource type="PackedScene" uid="uid://c2d5wps54lrdp" path="res://gui/button.tscn" id="4_6co67"]
+
+[sub_resource type="Environment" id="Environment_as0xq"]
+background_mode = 1
+fog_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_842so"]
+render_priority = 0
+shader = ExtResource("1_ki2ub")
+
+[sub_resource type="QuadMesh" id="QuadMesh_yum2l"]
+material = SubResource("ShaderMaterial_842so")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_juxux"]
+albedo_texture = ExtResource("1_ojhgu")
+uv1_scale = Vector3(20, 20, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qt6e3"]
+material = SubResource("StandardMaterial3D_juxux")
+size = Vector2(50, 50)
+
+[node name="Menu" type="Node3D"]
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_as0xq")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1279, 2.95099)
+
+[node name="PixelateShader" type="MeshInstance3D" parent="Camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+mesh = SubResource("QuadMesh_yum2l")
+skeleton = NodePath("../..")
+
+[node name="Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 5)
+omni_range = 7.0
+
+[node name="Grass" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_qt6e3")
+
+[node name="GUI" type="CanvasLayer" parent="."]
+script = ExtResource("3_toh8j")
+
+[node name="Center" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+
+[node name="ButtonDemo" parent="GUI/Center" instance=ExtResource("4_6co67")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 120.0
+offset_top = 0.0
+offset_right = 520.0
+offset_bottom = 100.0
+grow_horizontal = 1
+grow_vertical = 1
+text = "Run"
+
+[node name="ButtonExit" parent="GUI/Center" instance=ExtResource("4_6co67")]
+layout_mode = 1
+offset_left = 120.0
+offset_top = 120.0
+offset_right = 520.0
+offset_bottom = 220.0
+grow_horizontal = 1
+grow_vertical = 1
+text = "Exit"
+
+[connection signal="pressed" from="GUI/Center/ButtonDemo" to="GUI" method="_on_button_demo_pressed"]
+[connection signal="pressed" from="GUI/Center/ButtonExit" to="GUI" method="_on_button_exit_pressed"]

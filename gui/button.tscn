@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2d5wps54lrdp"]
+
+[ext_resource type="Theme" uid="uid://c62xeh7x8h8xf" path="res://themes/main_gui_theme.tres" id="1_sc8sv"]
+
+[node name="Button" type="Button"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = -176.0
+offset_bottom = -224.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_sc8sv")
+text = "Text"
+alignment = 0
