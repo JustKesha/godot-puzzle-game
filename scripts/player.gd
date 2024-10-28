@@ -1,6 +1,6 @@
 class_name Player extends CharacterBody3D
 
-# NOTE Would probably be better separated into modules
+# NOTE Would probably be better to separate bigger scripts like this one into modules
 
 # Movement
 const SPEED = 5.0
@@ -35,6 +35,9 @@ var item_picked_distance = 0.0
 # TODO Add the modifiable_number script from that other project to apply on inventory_size, will also be good for HPs
 # NOTE Could add dynamic inventory radius based on the number of items (plus min max)
 const INVENTORY_ITEM_SPEED = 4.5
+# Would also be funny to have an effect that increases the MINIMUM amount of items in inventory.. Kinda like a curse
+# ^ Could be implemented with smthn like an inventory updated signal + can_collect_items bool (but not using a system similar to modifiable_numbers mentioned above could result in bugs)
+const INVENTORY_SIZE_LIMIT = 7
 const INVENTORY_RADIUS = 1.0
 const INVENTORY_ADD_FOCUS_RADIUS = .2
 const INVENTORY_ROTATION_SPEED_DEFAULT = .25
@@ -155,8 +158,11 @@ func drop_item_picked():
 
 # Inventory
 
+func count_inventory_items():
+	return inventory.size()
+
 func update_inventory_items():
-	if inventory.size() == 0: return
+	if count_inventory_items() == 0: return
 	
 	# NOTE Consider moving this into an update_inventory_focus func
 	
@@ -197,7 +203,12 @@ func collect_item(item:Item = item_aimed, soft_action:bool = false):
 	if item in inventory:
 		print('ERROR: Tried to collect an item already in inventory')
 		return
-	# Works like (*LMK* pick -> *E* drop pick collect) should logically be (*LMK* pick -> *E* collect)
+	var inv_size = count_inventory_items()
+	if inv_size >= INVENTORY_SIZE_LIMIT:
+		print('ERROR: Failed to collect an item, inventory is full ', inv_size, '/', INVENTORY_SIZE_LIMIT)
+		# NOTE Could have a specific signal here
+		return
+	# Works like (*LMK* pick -> *E* drop pick collect) if using LMK first, should logically be (*LMK* pick -> *E* collect)
 	# Extra drop needed bc third optional argument provided in item.set_picked_up below
 	if item == item_picked:
 		drop_item_picked()
@@ -227,7 +238,7 @@ func remove_item(item:Item = item_aimed, soft_action:bool = false):
 	if inventory.size() > 0:
 		print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
 
-# Inventory display
+# Inventory - display
 
 # NOTE Not used atm
 func show_inventory(value:bool):
@@ -245,7 +256,7 @@ func set_inventory_displayed(value:bool):
 		inventory_center.position = INVENTORY_POSITION_UP
 		# show_inventory(false)
 
-# Inventory auto collect
+# Inventory - auto collect
 
 # WARNING Only items that have been recently picked up by the player should be detectable by this area
 # This could be fixed by having a delay timer and a bool var on each item, but isnt necesarry as theres probably
