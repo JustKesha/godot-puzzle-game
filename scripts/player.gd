@@ -1,5 +1,8 @@
 class_name Player extends CharacterBody3D
 
+# TODO Add a main menu
+# TODO Figure out a way to do checkpoints - game progression saving & loading
+# TODO Add saves to the main menu
 # NOTE Would probably be better to separate bigger scripts like this one into modules
 
 # Movement
@@ -19,6 +22,9 @@ const MAX_ROTATION = 85
 const BOBBING_FREQUENCY = 2.5
 const BOBBING_AMPLITUDE = 0.064
 var bobbing_offset = 0.0
+
+# Health
+# Connected shrine object, hp stats, checkpoint data
 
 # Items
 @onready var object_pointer = $Pointer
@@ -95,6 +101,12 @@ func apply_head_bobbing(delta:float):
 	)
 	
 	camera.transform.origin = local_camera_position
+
+# Health
+
+# Should probably move to a global game.gd
+func restart_level():
+	get_tree().reload_current_scene()
 
 # Items
 

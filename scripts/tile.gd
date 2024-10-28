@@ -1,7 +1,6 @@
 class_name Tile extends StaticBody3D
 
 # TODO Make it so the tile can detect neghiboring tiles and update when they are updated (Neighbors array)
-# TODO Add tile death
 
 # Activation
 @onready var holding_timer = $Holding
@@ -22,7 +21,7 @@ const animations = {
 	'lift': 'UP',
 }
 
-# Signals for inherited scenes
+# Signals
 signal created
 signal just_pressed (object_pressing:Object)
 signal just_unpressed (object_left:Object)
