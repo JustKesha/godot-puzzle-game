@@ -97,7 +97,6 @@ func set_on_pickup_cd(duration:float = DEFAULT_PICKUP_CD):
 	pickup_cd_timer.wait_time = duration
 	pickup_cd_timer.start(0)
 
-# For ease of use
 func reset_pickup_cd():
 	set_on_pickup_cd(0)
 

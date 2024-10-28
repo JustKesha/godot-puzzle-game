@@ -32,7 +32,7 @@ var item_picked_distance = 0.0
 
 # Inventory
 @onready var inventory_center = $Inventory
-# TODO Bring the modifiable_number script from the other project to apply on inventory_size, will also be good for HPs
+# TODO Add the modifiable_number script from that other project to apply on inventory_size, will also be good for HPs
 # NOTE Could add dynamic inventory radius based on the number of items (plus min max)
 const INVENTORY_ITEM_SPEED = 4.5
 const INVENTORY_RADIUS = 1.0
@@ -150,6 +150,7 @@ func drop_item_picked():
 	print('Dropped ', item_picked.name)
 	
 	item_picked.set_picked_up(false)
+	item_picked.reset_pickup_cd() # To be able to insta collect after drop / use auto-collector
 	item_picked = null
 
 # Inventory
@@ -189,7 +190,6 @@ func update_inventory_items():
 	inventory_spin_speed = INVENTORY_ROTATION_SPEED_FOCUSED if is_inventory_focused else INVENTORY_ROTATION_SPEED_DEFAULT
 	inventory_spin_offset += inventory_spin_speed
 
-# NOTE Consider renaming to remove_inventory_item & add_inventory_item
 func collect_item(item:Item = item_aimed, soft_action:bool = false):
 	if item == null:
 		print('ERROR: Tried to collect a null item')
