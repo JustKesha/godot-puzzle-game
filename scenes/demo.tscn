@@ -90,19 +90,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
 
 [node name="Items" type="Node3D" parent="."]
 
-[node name="Item4" parent="Items" instance=ExtResource("5_k3pds")]
+[node name="ItemStew1" parent="Items" instance=ExtResource("5_k3pds")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.57712, 1.35727, 7.03056)
 
-[node name="Item5" parent="Items" instance=ExtResource("4_artni")]
+[node name="ItemCube1" parent="Items" instance=ExtResource("4_artni")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.32312, 0.91984, 7.64438)
 
-[node name="Item6" parent="Items" instance=ExtResource("5_k3pds")]
+[node name="ItemStew2" parent="Items" instance=ExtResource("5_k3pds")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.38572, 1.35727, 7.6932)
 
-[node name="Item8" parent="Items" instance=ExtResource("5_k3pds")]
+[node name="ItemStew3" parent="Items" instance=ExtResource("5_k3pds")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.0219024, 1.35727, 8.26931)
 
-[node name="Item9" parent="Items" instance=ExtResource("4_artni")]
+[node name="ItemCube2" parent="Items" instance=ExtResource("4_artni")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.35579, 0.91984, 7.81938)
 
 [node name="Item7" parent="Items" instance=ExtResource("4_artni")]
@@ -135,8 +135,8 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.323
 [node name="Item16" parent="Items" instance=ExtResource("4_artni")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.35579, 3.01862, 10.9956)
 
-[node name="Item10" parent="Items" instance=ExtResource("5_k3pds")]
+[node name="ItemStew4" parent="Items" instance=ExtResource("5_k3pds")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.29319, 1.35727, 7.86818)
 
-[node name="Item12" parent="Items" instance=ExtResource("5_k3pds")]
+[node name="ItemStew5" parent="Items" instance=ExtResource("5_k3pds")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.53505, 1.35727, 7.36447)

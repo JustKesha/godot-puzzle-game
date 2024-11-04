@@ -105,7 +105,7 @@ func stop_holding():
 
 # General
 
-# When using _init the signal do esnt reach inherited scene script
+# _init doesnt seem to activate signals
 func _ready() -> void:
 	created.emit()
 

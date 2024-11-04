@@ -22,7 +22,7 @@ func load_scene(new_packed_scene:Resource):
 func start_demo():
 	load_scene(scenes.demo)
 
-func start_demo_from_save(save_name:String = DEFAULT_SAVE_FILE_NAME):
+func start_demo_from_save_file(save_name:String = DEFAULT_SAVE_FILE_NAME):
 	var tree = get_tree()
 	
 	start_demo()
@@ -34,7 +34,7 @@ func start_demo_from_save(save_name:String = DEFAULT_SAVE_FILE_NAME):
 	
 	var game:Game = tree.current_scene
 	
-	game.load_save(save_name)
+	game.load_save_file(save_name)
 
 func goto_menu():
 	load_scene(scenes.menu)

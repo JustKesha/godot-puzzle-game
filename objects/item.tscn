@@ -12,7 +12,7 @@ height = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pc3ty"]
 shading_mode = 0
-albedo_color = Color(0.796242, 0.796243, 0.796243, 1)
+albedo_color = Color(0.937255, 0.937255, 0.937255, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_hmic3"]
 material = SubResource("StandardMaterial3D_pc3ty")
@@ -78,7 +78,7 @@ axis_lock_angular_z = true
 mass = 2.5
 physics_material_override = SubResource("PhysicsMaterial_2t3f8")
 script = ExtResource("1_6v7ew")
-metadata/type = "DEFAULT"
+metadata/type = "NONE"
 
 [node name="Hitbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_d23ss")

@@ -8,6 +8,7 @@ class_name Item extends RigidBody3D
 @onready var death_particles = [ $DeathParticles, ]
 @onready var remove_on_death = [ $Hitbox, $View, ]
 const DEFAULT_PICKUP_CD = 0.5
+var type:String
 var death_duration = 1.0
 var is_picked_up = false
 var is_on_pickup_cd = false
@@ -50,10 +51,6 @@ var animations = {
 @onready var neighborhood_area = $Neighborhood
 
 # Item
-
-func get_type() -> String:
-	# Using metadata bc i believe many items wont be needing a script & i plan to keep most of the code in tiles and other objects
-	return get_meta('type')
 
 func set_hitbox_disabled(value:bool):
 	# Used in player.show_inventory, but player.show_inventory is never used atm
@@ -207,6 +204,8 @@ func wake_up_neighbors(velocity:Vector3 = Vector3(0, 1, 0)):
 # General
 
 func _ready():
+	# Using metadata bc i believe many items wont be needing a script, i plan to keep most of the code in tiles and other objects
+	type = get_meta('type')
 	animation_player.play(animations.default)
 
 func _process(delta:float):

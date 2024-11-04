@@ -149,14 +149,14 @@ func pick_up_item(item:Item = item_aimed):
 	item_picked_distance = camera.global_position.distance_to(item.global_position)
 	item_picked.set_picked_up(true)
 	
-	print('Picked up ', item.name)
+	print('Picked up ', item.type)
 
 func drop_item_picked():
 	if item_picked == null:
 		push_warning('Tried to drop a null object')
 		return
 	
-	print('Dropped ', item_picked.name)
+	print('Dropped ', item_picked.type)
 	
 	item_picked.set_picked_up(false)
 	item_picked.reset_pickup_cd() # To be able to insta collect after drop / use auto-collector
@@ -220,8 +220,8 @@ func collect_item(item:Item = item_aimed, soft_action:bool = false):
 	
 	inventory.append(item)
 	
-	print('Collected ', item.name)
-	print('Inventory: ', ', '.join(inventory.map(func(i): return i.name)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
+	print('Collected ', item.type)
+	print('Inventory: ', ', '.join(inventory.map(func(i): return i.type)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
 
 func remove_item(item:Item = item_aimed, soft_action:bool = false):
 	if item == null: return
@@ -230,9 +230,9 @@ func remove_item(item:Item = item_aimed, soft_action:bool = false):
 	
 	inventory.erase(item)
 	
-	print('Removed ', item.name, ' from inventory')
+	print('Removed ', item.type, ' from inventory')
 	if inventory.size() > 0:
-		print('Inventory: ', ', '.join(inventory.map(func(i): return i.name)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
+		print('Inventory: ', ', '.join(inventory.map(func(i): return i.type)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
 
 # Inventory - display
 
