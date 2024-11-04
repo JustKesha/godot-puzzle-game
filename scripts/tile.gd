@@ -2,6 +2,9 @@ class_name Tile extends StaticBody3D
 
 # TODO Make it so the tile can detect neghiboring tiles and update when they are updated (Neighbors array)
 
+# General
+@onready var game:Game = $'../../'
+
 # Activation
 @onready var holding_timer = $Holding
 var pressed_by = []

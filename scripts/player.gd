@@ -3,6 +3,7 @@ class_name Player extends CharacterBody3D
 # TODO Add a main menu
 # TODO Figure out a way to do checkpoints - game progression saving & loading
 # TODO Add saves to the main menu
+# TODO Use setget keywords
 # NOTE Would probably be better to separate bigger scripts like this one into modules
 
 # Movement
@@ -22,9 +23,6 @@ const MAX_ROTATION = 85
 const BOBBING_FREQUENCY = 2.5
 const BOBBING_AMPLITUDE = 0.064
 var bobbing_offset = 0.0
-
-# Health
-# Connected shrine object, hp stats, checkpoint data
 
 # Items
 @onready var object_pointer = $Pointer
@@ -102,12 +100,6 @@ func apply_head_bobbing(delta:float):
 	
 	camera.transform.origin = local_camera_position
 
-# Health
-
-# Should probably move to a global game.gd
-func restart_level():
-	get_tree().reload_current_scene()
-
 # Items
 
 # TODO Rename, technically now updates object_aimed and item_aimed
@@ -143,10 +135,10 @@ func update_item_picked():
 
 func pick_up_item(item:Item = item_aimed):
 	if item == null:
-		print('ERROR: Tried to pick up a null item')
+		push_warning('Tried to pick up a null item')
 		return
 	if item.is_dead:
-		print('ERROR: Tried to pick up a dead item')
+		push_warning('Tried to pick up a dead item')
 		return
 	if item_picked != null:
 		drop_item_picked()
@@ -161,7 +153,7 @@ func pick_up_item(item:Item = item_aimed):
 
 func drop_item_picked():
 	if item_picked == null:
-		print('ERROR: Tried to drop a null object')
+		push_warning('Tried to drop a null object')
 		return
 	
 	print('Dropped ', item_picked.name)
@@ -211,46 +203,36 @@ func update_inventory_items():
 	inventory_spin_offset += inventory_spin_speed
 
 func collect_item(item:Item = item_aimed, soft_action:bool = false):
-	if item == null:
-		print('ERROR: Tried to collect a null item')
-		return
-	if item in inventory:
-		print('ERROR: Tried to collect an item already in inventory')
-		return
+	if item == null: return
+	if item in inventory: return
+	
 	var inv_size = count_inventory_items()
+	
 	if inv_size >= INVENTORY_SIZE_LIMIT:
-		print('ERROR: Failed to collect an item, inventory is full ', inv_size, '/', INVENTORY_SIZE_LIMIT)
+		print('Inventory is full ', inv_size, '/', INVENTORY_SIZE_LIMIT)
 		# NOTE Could have a specific signal here
 		return
+	
 	# Works like (*LMK* pick -> *E* drop pick collect) if using LMK first, should logically be (*LMK* pick -> *E* collect)
 	# Extra drop needed bc third optional argument provided in item.set_picked_up below
-	if item == item_picked:
-		drop_item_picked()
-	if !item.set_picked_up(true, soft_action, false):
-		print('ERROR: Couldnt pick up an item')
-		return
+	if item == item_picked: drop_item_picked()
+	if !item.set_picked_up(true, soft_action, false): return
 	
 	inventory.append(item)
 	
 	print('Collected ', item.name)
-	print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
+	print('Inventory: ', ', '.join(inventory.map(func(i): return i.name)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
 
 func remove_item(item:Item = item_aimed, soft_action:bool = false):
-	if item == null:
-		print('ERROR: Tried to remove a null item')
-		return
-	if not item in inventory:
-		print('ERROR: Tried to remove an item that is not in inventory')
-		return
-	if !item.set_picked_up(false, soft_action):
-		print('ERROR: Couldnt remove an item')
-		return
+	if item == null: return
+	if not item in inventory: return
+	if !item.set_picked_up(false, soft_action): return
 	
 	inventory.erase(item)
 	
 	print('Removed ', item.name, ' from inventory')
 	if inventory.size() > 0:
-		print('Inventory: ' + ', '.join(inventory.map(func(i): return i.name)) + ' (' + str(inventory.size()) + ')')
+		print('Inventory: ', ', '.join(inventory.map(func(i): return i.name)), ' (' + str(inventory.size()), '/', INVENTORY_SIZE_LIMIT, ')')
 
 # Inventory - display
 
