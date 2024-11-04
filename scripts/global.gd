@@ -2,8 +2,8 @@ extends Node
 
 # Scene switching
 const scenes = {
-	'demo': preload("res://scenes/demo.tscn"),
-	'menu': preload("res://scenes/menu.tscn"),
+	'DEMO': preload("res://scenes/demo.tscn"),
+	'MENU': preload("res://scenes/menu.tscn"),
 }
 
 # Progression
@@ -20,7 +20,7 @@ func load_scene(new_packed_scene:Resource):
 	get_tree().change_scene_to_packed(new_packed_scene)
 
 func start_demo():
-	load_scene(scenes.demo)
+	load_scene(scenes.DEMO)
 
 func start_demo_from_save_file(save_name:String = DEFAULT_SAVE_FILE_NAME):
 	var tree = get_tree()
@@ -37,4 +37,4 @@ func start_demo_from_save_file(save_name:String = DEFAULT_SAVE_FILE_NAME):
 	game.load_save_file(save_name)
 
 func goto_menu():
-	load_scene(scenes.menu)
+	load_scene(scenes.MENU)

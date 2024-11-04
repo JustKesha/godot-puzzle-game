@@ -10,4 +10,5 @@ func _on_button_exit_pressed() -> void:
 	Global.close_game()
 
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	print('Main menu')

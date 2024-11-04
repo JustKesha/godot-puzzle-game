@@ -299,3 +299,6 @@ func _input(event): # not sure _unhandled_input() is needed
 
 	elif event.is_action_pressed("inventory_toggle"):
 		set_inventory_displayed(!is_inventory_displayed)
+
+	elif event.is_action_pressed("go_to_menu"):
+		Global.goto_menu()

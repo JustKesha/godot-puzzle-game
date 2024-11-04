@@ -6,9 +6,8 @@ class_name Game extends Node
 
 # Items
 @onready var item_father = $Items
-# Item type to packed scene
-# TODO Figure something out, dont like having two same ids stores in different places (item meta/type, game.items)
 const items = {
+	# NOTE These keys are item types (look up items metadata / item.type)
 	'CUBE': preload("res://objects/items/item_cube.tscn"),
 	'STEW': preload("res://objects/items/item_stew.tscn"),
 }
@@ -19,7 +18,7 @@ const items = {
 # Progression
 
 func restart():
-	# Currently restarting loads the default save file, even tho all the scripts i made are suited for multiple save files im only using one
+	# Currently restarting also loads the default save file, even tho all the scripts i made are suited for multiple save files im only using one
 	Global.start_demo_from_save_file()
 
 func save(save_name:String = Global.DEFAULT_SAVE_FILE_NAME):
